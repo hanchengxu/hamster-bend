@@ -30,6 +30,9 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.0.1'
+	implementation 'org.springframework.boot:spring-boot-starter-aop'
+	runtimeOnly 'org.postgresql:postgresql'
 }
 
 test {
