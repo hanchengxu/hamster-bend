@@ -46,7 +46,7 @@
 	<logger name="org.springframework" level="error"></logger>
 
 	<!--打印SQL-->
-    <logger name="java.sql.PreparedStatement" level="DEBUG" />
+    <logger name="java.sql.PreparedStatement" level="debug" />
 
     <root level="INFO">
         <appender-ref ref="console" />
@@ -57,6 +57,7 @@
     	<appender-ref ref="fileInfoLog"/>
         <appender-ref ref="fileErrorLog"/>
      </logger>
+
     <!--logback.LogbackDemo：类的全路径 -->
     <!--<logger name="com.example.demo.controller.HelloController" level="WARN" additivity="false"> -->
        <!-- <appender-ref ref="console"/>-->
