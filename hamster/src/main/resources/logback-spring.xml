@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration  scan="true" scanPeriod="60 seconds" debug="false">
     <contextName>logback</contextName>
-    <property name="log.path" value="/Users/tengjun/Documents/log" />
+    <property name="log.path" value="/var/hcxweb/logs/hamster" />
     <!--console 印刷-->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -45,8 +45,10 @@
 
 	<logger name="org.springframework" level="error"></logger>
 
+	<!--打印SQL-->
+    <logger name="java.sql.PreparedStatement" level="DEBUG" />
 
-    <root level="info">
+    <root level="INFO">
         <appender-ref ref="console" />
         <appender-ref ref="fileInfoLog"/>
     </root>
