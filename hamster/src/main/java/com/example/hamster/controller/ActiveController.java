@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.hamster.controller.bean.GetActiveBean;
 import com.example.hamster.controller.bean.SaveActiveBean;
 import com.example.hamster.entity.Active;
 import com.example.hamster.service.ActiveService;
@@ -23,12 +24,18 @@ public class ActiveController {
     @RequestMapping("saveActive")
     public String saveActive(@RequestBody SaveActiveBean activeBean) {
 
-        System.out.println(activeBean);
-
         Active active = new Active(activeBean.getMsg().get(0),activeBean.getMsg().get(1),new Date(),"system");
 
         activeService.insertOne(active);
 
         return "OK";
+    }
+
+    @RequestMapping("getLapCount")
+    public String getlapCount(@RequestBody GetActiveBean getActiveBean) {
+
+        Integer lapCount = activeService.findLapCount(getActiveBean);
+
+        return "{\"lapCount\":"+lapCount+"}";
     }
 }
