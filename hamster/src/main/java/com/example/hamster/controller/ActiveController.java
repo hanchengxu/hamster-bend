@@ -5,6 +5,8 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.hamster.controller.bean.GetActiveBean;
@@ -31,11 +33,27 @@ public class ActiveController {
         return "OK";
     }
 
-    @RequestMapping("getLapCount")
+    @RequestMapping(value= "getLapCount",method=RequestMethod.POST,produces = "application/json;charset=utf-8")
     public String getlapCount(@RequestBody GetActiveBean getActiveBean) {
 
         Integer lapCount = activeService.findLapCount(getActiveBean);
 
         return "{\"lapCount\":"+lapCount+"}";
     }
+
+    @RequestMapping(value= "getMaxLapCount",method=RequestMethod.GET,produces = "application/json;charset=utf-8")
+    public String getMaxLapCount(@RequestParam(name = "hamsterId", required = true) Integer hamsterId) {
+
+        if(null == hamsterId) {
+            return null;
+        }
+
+        GetActiveBean bean = new GetActiveBean();
+        bean.setHamsterId(hamsterId);
+
+        Integer lapCount = activeService.findLapCount(bean);
+
+        return "{\"lapCount\":"+lapCount+"}";
+    }
+
 }

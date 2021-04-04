@@ -22,23 +22,40 @@ public class ActiveService {
     }
 
     /**
-     * count lap from startDate to endDate
+     * if getActiveBean's time params is null, get max lapCount,
+     * else get lapCount between two time
      */
     public Integer findLapCount(GetActiveBean getActiveBean) {
+
+
+        int lapCount =0;
+
     	SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
 		Date startTime= null;
 		Date endTime = null;
-		try {
-			startTime = dateformat.parse(getActiveBean.getStartDate());
-			endTime	= dateformat.parse(getActiveBean.getEndDate());
-		} catch (ParseException e) {
-			e.printStackTrace();
+
+		if(null !=getActiveBean.getStartDate() && null !=getActiveBean.getEndDate()) {
+		    try {
+	            startTime = dateformat.parse(getActiveBean.getStartDate());
+	            endTime = dateformat.parse(getActiveBean.getEndDate());
+	        } catch (ParseException e) {
+	            e.printStackTrace();
+	        }
+		    List<Active> activeList = activeMapper.selectLapCountByDate(getActiveBean.getHamsterId(), startTime, endTime);
+
+	        int maxCount = activeList.get(0).getLap_count();
+	        int mixCount = activeList.get(activeList.size()-1).getLap_count();
+
+	        lapCount = maxCount - mixCount;
+
+		}else {
+
+		    Active active = activeMapper.selectMapLapCount(getActiveBean.getHamsterId());
+
+		    lapCount = active.getLap_count();
 		}
 
-    	List<Active> activeList = activeMapper.selectLapCountByDate(getActiveBean.getHamsterId(), startTime, endTime);
-    	int maxCount = activeList.get(0).getLap_count();
-    	int mixCount = activeList.get(activeList.size()-1).getLap_count();
-    	int lapCount = maxCount - mixCount;
 		return lapCount;
     }
 
