@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration  scan="true" scanPeriod="60 seconds" debug="false">
-    <contextName>logback</contextName>
+
+    <contextName>hamster</contextName>
+
     <property name="log.path" value="/var/hcxweb/logs/hamster" />
+
     <!--console 印刷-->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -11,12 +14,6 @@
 
     <!--Infoファイル-->
     <appender name="fileInfoLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <filter class="ch.qos.logback.classic.filter.LevelFilter">
-             <level>INFO</level>
-             <onMatch>ACCEPT</onMatch>
-             <onMismatch>DENY</onMismatch>
-         </filter>
-
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>${log.path}/logback.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxFileSize>50MB</maxFileSize>
@@ -27,7 +24,8 @@
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
-    <!--Error-->
+
+    <!--Errorファイル-->
     <appender name="fileErrorLog"  class="ch.qos.logback.core.rolling.RollingFileAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>ERROR</level>
@@ -43,23 +41,13 @@
         </encoder>
     </appender>
 
-	<logger name="org.springframework" level="error"></logger>
-
 	<!--打印SQL-->
-    <logger name="java.sql.PreparedStatement" level="debug" />
+    <logger name="java.sql.PreparedStatement" level="info" />
 
     <root level="INFO">
         <appender-ref ref="console" />
         <appender-ref ref="fileInfoLog"/>
+        <appender-ref ref="fileErrorLog"/>
     </root>
 
-    <logger name="com.example.demo.controller" level="info">
-    	<appender-ref ref="fileInfoLog"/>
-        <appender-ref ref="fileErrorLog"/>
-     </logger>
-
-    <!--logback.LogbackDemo：类的全路径 -->
-    <!--<logger name="com.example.demo.controller.HelloController" level="WARN" additivity="false"> -->
-       <!-- <appender-ref ref="console"/>-->
-   <!-- </logger>-->
 </configuration>
