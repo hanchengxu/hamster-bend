@@ -2,9 +2,9 @@ package com.example.hamster.config;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.After;
-import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,16 +15,46 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Component
 @Aspect
 public class LogAspect {
-	private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
+
+    private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
+
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    private final String POINT_CUT = "execution(public * com.example.hamster.controller.*.*(..))";
-    @Pointcut(POINT_CUT)
-    public void pointCut(){}
+    private final String POINT_CUT = "execution(public * com.example.hamster..*.*(..))";
 
-    //   @Before(value = "pointCut()")
-    //   public void before(JoinPoint joinPoint){
-    //       logger.info("before start");
+    @Pointcut(POINT_CUT)
+    public void pointCut() {
+    }
+
+    @AfterThrowing(value = POINT_CUT, throwing = "exception")
+    public void doAfterThrowingAdvice(JoinPoint joinPoint, Throwable exception) {
+        logger.error("Web Exception:"+exception.getMessage());
+//        exception.printStackTrace();
+    }
+
+    @Before(value = POINT_CUT)
+    public void doBeforeAdvice(JoinPoint joinPoint) {
+        Logger localLogger = LoggerFactory.getLogger(joinPoint.getTarget().getClass());
+        localLogger.debug(joinPoint.getSignature().getName());
+    }
+
+//    @Around(value = POINT_CUT)
+    public Object doAroundAdvice(ProceedingJoinPoint proceedingJoinPoint) {
+        logger.info("around start：" + proceedingJoinPoint.getSignature().toString());
+        Object obj = null;
+        try {
+            obj = proceedingJoinPoint.proceed();
+            logger.info(obj.toString());
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        logger.info("around end");
+        return obj;
+    }
+
+    // @Before(value = "pointCut()")
+    // public void before(JoinPoint joinPoint){
+    // logger.info("before start");
 //
 //        Object[] args = joinPoint.getArgs();
 //        Arrays.stream(args).forEach(arg->{
@@ -76,9 +106,8 @@ public class LogAspect {
 //        logger.info(request.getRemoteAddr()); //127.0.0.1
 //        logger.info(request.getMethod()); //GET
 
-    //       logger.info("before end");
-    //   }
-
+    // logger.info("before end");
+    // }
 
 //    /**
 //     * 后置返回
@@ -113,23 +142,4 @@ public class LogAspect {
 //            logger.info("发生了空指针异常!!!!!");
 //        }
 //    }
-
-    @After(value = POINT_CUT)
-    public void doAfterAdvice(JoinPoint joinPoint){
-        logger.info("afer");
-    }
-
-    @Around(value = POINT_CUT)
-    public Object doAroundAdvice(ProceedingJoinPoint proceedingJoinPoint){
-        logger.info("around start："+proceedingJoinPoint.getSignature().toString());
-        Object obj = null;
-        try {
-            obj = proceedingJoinPoint.proceed();
-            logger.info(obj.toString());
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        }
-        logger.info("around end");
-        return obj;
-    }
 }
