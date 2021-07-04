@@ -33,6 +33,12 @@ public class ActiveController {
         return "OK";
     }
 
+    /**
+     * get laps between a time quantum
+     * getActiveBean.startDate and endDate String format: yyyy-MM-dd hh:mm:ss
+     * @param getActiveBean
+     * @return
+     */
     @RequestMapping(value= "getLapCount",method=RequestMethod.POST,produces = "application/json;charset=utf-8")
     public String getlapCount(@RequestBody GetActiveBean getActiveBean) {
 
@@ -41,6 +47,11 @@ public class ActiveController {
         return "{\"lapCount\":"+lapCount+"}";
     }
 
+    /**
+     * get total laps from active table by hamsterId
+     * @param hamsterId
+     * @return
+     */
     @RequestMapping(value= "getMaxLapCount",method=RequestMethod.GET,produces = "application/json;charset=utf-8")
     public String getMaxLapCount(@RequestParam(name = "hamsterId", required = true) Integer hamsterId) {
 

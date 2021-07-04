@@ -26,11 +26,6 @@ public class LogAspect {
     public void pointCut() {
     }
 
-    @AfterThrowing(value = POINT_CUT, throwing = "exception")
-    public void doAfterThrowingAdvice(JoinPoint joinPoint, Throwable exception) {
-        logger.error("Web Exception:"+exception.getMessage());
-//        exception.printStackTrace();
-    }
 
     @Before(value = POINT_CUT)
     public void doBeforeAdvice(JoinPoint joinPoint) {
