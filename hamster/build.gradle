@@ -38,6 +38,7 @@ dependencies {
 	}
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.0.1'
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
+	compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.12'
 	runtimeOnly 'org.postgresql:postgresql'
 }
 
