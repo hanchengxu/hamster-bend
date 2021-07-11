@@ -17,7 +17,7 @@ public class HttpClientPool {
          * Assigns maximum total connection value.
          * default: 30
          */
-        httpclient = HttpClients.custom().setMaxConnTotal(30).build();
+        httpclient = HttpClients.custom().setMaxConnTotal(30).setMaxConnPerRoute(15).build();
     }
 
     public static HttpClientPool getInstance() {
