@@ -1,5 +1,6 @@
 package com.example.hamster.utils;
 
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
@@ -13,11 +14,25 @@ public class HttpClientPool {
     }
 
     private HttpClientPool() {
+
         /**
-         * Assigns maximum total connection value.
-         * default: 30
+         * some config about connection's  timeout
          */
-        httpclient = HttpClients.custom().setMaxConnTotal(30).setMaxConnPerRoute(15).build();
+        RequestConfig config = RequestConfig.custom()
+                .setConnectTimeout(30*1000)
+                .setConnectionRequestTimeout(30*1000)
+                .setSocketTimeout(30*1000)
+                .build();
+
+        /**
+         * 1.ConnectTImeout 30s
+         * 2.Assigns maximum total connection value.
+         */
+        httpclient = HttpClients.custom()
+                .setDefaultRequestConfig(config)
+                .setMaxConnTotal(30)
+                .setMaxConnPerRoute(10)
+                .build();
     }
 
     public static HttpClientPool getInstance() {
