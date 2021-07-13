@@ -11,4 +11,6 @@ public interface HamsterMapper {
 
     @Select("select * from hamster where hamster_id = #{id}")
     Hamster findById(@Param("id") int id);
+
+    Hamster findByIdXML(int id);
 }

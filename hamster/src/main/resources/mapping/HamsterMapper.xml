@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.hamster.mapper.HamsterMapper">
+
+
+    <select id="findByIdXML" parameterType="Integer"  resultType="com.example.hamster.entity.Hamster">
+        select * from hamster where hamster_id = #{id} ;
+    </select>
+
+</mapper>
