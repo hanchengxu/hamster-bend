@@ -2,6 +2,7 @@ package com.example.hamster.mapper;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -24,4 +25,6 @@ public interface ActiveMapper {
 
 	@Select("select * from active where  hamster_id =#{hamsterId} order by lap_count desc limit 1")
 	public Active selectMapLapCount(@Param("hamsterId") int hamsterId);
+
+	public List<Map<String, Object>> selectLapCountByMonth(int id);
 }

@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,6 +58,11 @@ public class ActiveService {
 		}
 
 		return lapCount;
+    }
+
+    public List<Map<String, Object>> getLapCountByMonth(Integer hamsterId) {
+    	List<Map<String, Object>> lapCountByMonthList = activeMapper.selectLapCountByMonth(hamsterId);
+		return lapCountByMonthList;
     }
 
 }

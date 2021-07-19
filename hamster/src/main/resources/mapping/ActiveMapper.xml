@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.hamster.mapper.ActiveMapper">
+
+	<resultMap id="selectLapCountByMonthResult" type="java.util.HashMap">
+        <result property="month" column="month" jdbcType="VARCHAR" />
+        <result property="total" column="total" jdbcType="INTEGER"/>
+	</resultMap>
+
+    <select id="selectLapCountByMonth" parameterType="Integer"  resultType="java.util.HashMap">
+          select
+          	to_char(insert_date_time,'yyyy年 MM月') as month,
+          	(max(lap_count)-min(lap_count)) as total
+          from
+          	active
+		  where
+		  	insert_date_time between to_timestamp('2021-01-01','YYYY-MM-DD') and now()
+		  and
+		  	hamster_id = #{id}
+		  group by month
+		  order by month;
+    </select>
+
+</mapper>
