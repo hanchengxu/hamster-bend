@@ -108,6 +108,32 @@ public class ActiveController {
     	return bf.toString();
     }
 
+    @RequestMapping(value= "getLapCountByDay",method=RequestMethod.GET,produces = "application/json;charset=utf-8")
+    public String getLapCountByDay() {
+    	List<Map<String, Object>> lapList = activeService.getLapCountByDay(1);
+
+    	List<String> xAxisData = new ArrayList<String>();
+    	List<Integer> seriesData = new ArrayList<Integer>();
+    	for(Map<String, Object> map: lapList) {
+    		xAxisData.add((String)map.get("day"));
+    		seriesData.add((Integer)map.get("total"));
+    	}
+    	String seriesDataStr = JSON.toJSONString(seriesData);
+    	String xAxisDataStr = JSON.toJSONString(xAxisData);
+    	//echart JSON
+    	StringBuffer bf = new StringBuffer();
+    	bf.append("{");
+    	bf.append("\"xAxis\": ");
+    	bf.append(xAxisDataStr).append(",");
+    	bf.append("\"series\": ");
+    	bf.append(seriesDataStr);
+    	bf.append("}");
+
+    	return bf.toString();
+    }
+
+
+
     @SuppressWarnings({ "unused", "rawtypes", "unchecked" })
 	@RequestMapping(value="testPool")
     public String testPool() throws ClassNotFoundException {

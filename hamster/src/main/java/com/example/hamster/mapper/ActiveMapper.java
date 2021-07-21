@@ -27,4 +27,6 @@ public interface ActiveMapper {
 	public Active selectMapLapCount(@Param("hamsterId") int hamsterId);
 
 	public List<Map<String, Object>> selectLapCountByMonth(int id);
+
+	public List<Map<String, Object>> selectLapCountByDay(int id);
 }

@@ -21,4 +21,19 @@
 		  order by month;
     </select>
 
+    <select id="selectLapCountByDay" parameterType="Integer"  resultType="java.util.HashMap">
+    	select
+		 to_char(insert_date_time,'yyyy-MM-DD') as day ,
+		 (max(lap_count)-min(lap_count)) as total
+		from active
+		where
+			hamster_id = #{id}
+		and
+		  	insert_date_time between to_timestamp('2021-01-01','YYYY-MM-DD') and now()
+		group by day
+		order by day;
+    </select>
+
+
+
 </mapper>

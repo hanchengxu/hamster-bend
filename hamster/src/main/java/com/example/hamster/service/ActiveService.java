@@ -65,4 +65,11 @@ public class ActiveService {
 		return lapCountByMonthList;
     }
 
+    public List<Map<String, Object>> getLapCountByDay(Integer hamsterId) {
+    	List<Map<String, Object>> lapCountByDayList = activeMapper.selectLapCountByDay(hamsterId);
+		return lapCountByDayList;
+    }
+
+
+
 }
