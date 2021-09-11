@@ -24,8 +24,6 @@ import com.example.hamster.entity.Active;
 import com.example.hamster.service.ActiveService;
 import com.zaxxer.hikari.HikariDataSource;
 
-import jdk.jshell.spi.ExecutionControl.RunException;
-
 @RestController
 public class ActiveController {
 
@@ -130,6 +128,30 @@ public class ActiveController {
     	bf.append("}");
 
     	return bf.toString();
+    }
+
+    @RequestMapping(value= "getScatterByHour",method=RequestMethod.GET,produces = "application/json;charset=utf-8")
+    public String  getScatterByHour() {
+        List<Map<String, Object>>  lapList = activeService.getScatterByHour();
+        List<String> xAxisData = new ArrayList<String>();
+        List<Integer> seriesData = new ArrayList<Integer>();
+        lapList.stream().forEach( mapData -> {
+            xAxisData.add((String)mapData.get("day_time"));
+            seriesData.add((Integer)mapData.get("lap_count"));
+        });
+
+        String seriesDataStr = JSON.toJSONString(seriesData);
+        String xAxisDataStr = JSON.toJSONString(xAxisData);
+        //echart JSON
+        StringBuffer bf = new StringBuffer();
+        bf.append("{");
+        bf.append("\"xAxis\": ");
+        bf.append(xAxisDataStr).append(",");
+        bf.append("\"series\": ");
+        bf.append(seriesDataStr);
+        bf.append("}");
+
+        return bf.toString();
     }
 
 

@@ -21,7 +21,7 @@
 		  order by month;
     </select>
 
-    <select id="selectLapCountByDay" parameterType="Integer"  resultType="java.util.HashMap">
+    <select id="selectLapCountByDay" parameterType="Integer" resultType="java.util.HashMap">
     	select
 		 to_char(insert_date_time,'yyyy-MM-DD') as day ,
 		 (max(lap_count)-min(lap_count)) as total
@@ -32,6 +32,23 @@
 		  	insert_date_time between to_timestamp('2021-01-01','YYYY-MM-DD') and now()
 		group by day
 		order by day;
+    </select>
+
+    <select id="selectScatterByHour" resultType="java.util.HashMap">
+    	with temp_t as (
+			select max(lap_count)-min(lap_count) as lap_count ,
+			to_char(insert_date_time,'YYYY-MM-DD-HH24') as day_time
+			from active group by to_char(insert_date_time,'YYYY-MM-DD-HH24') order by to_char(insert_date_time,'YYYY-MM-DD-HH24') desc
+		)
+		select
+			avg(lap_count)::int as lap_count,
+			split_part(temp_t.day_time ,'-', 4) as day_time
+		from
+			temp_t
+		group by
+			split_part(temp_t.day_time ,'-', 4)
+		order by
+			to_number(split_part(temp_t.day_time ,'-', 4),'99');
     </select>
 
 
