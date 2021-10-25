@@ -39,7 +39,11 @@ public class ActiveController {
     @RequestMapping("saveActive")
     public String saveActive(@RequestBody SaveActiveBean activeBean) {
 
-        Active active = new Active(activeBean.getMsg().get(0),activeBean.getMsg().get(1),new Date(),"system");
+    	Active active = new Active();
+    	active.setHamsterId(activeBean.getMsg().get(0));
+    	active.setLapCount(activeBean.getMsg().get(1));
+    	active.setInsertDateTime(new Date());
+    	active.setInsertUser("system");
 
         activeService.insertOne(active);
 

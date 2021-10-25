@@ -10,7 +10,6 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
-import com.example.hamster.config.LogAspect;
 import com.example.hamster.constant.ResponseCode;
 
 /**
@@ -19,10 +18,10 @@ import com.example.hamster.constant.ResponseCode;
  * @author 10087
  *
  */
-@Component
+//@Component
 public class GlobalException implements HandlerExceptionResolver{
 
-	private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
+	private static final Logger logger = LoggerFactory.getLogger(GlobalException.class);
 
 	@Override
 	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler,

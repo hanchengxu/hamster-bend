@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.hamster.mapper.CaseTemperatureMapper">
+  <resultMap id="BaseResultMap" type="com.example.hamster.entity.CaseTemperature">
+    <result column="ct_id" jdbcType="INTEGER" property="ctId" />
+    <result column="hamster_id" jdbcType="INTEGER" property="hamsterId" />
+    <result column="ct" jdbcType="NUMERIC" property="ct" />
+    <result column="ct_time" jdbcType="TIMESTAMP" property="ctTime" />
+    <result column="insert_date_time" jdbcType="TIMESTAMP" property="insertDateTime" />
+    <result column="update_date_time" jdbcType="TIMESTAMP" property="updateDateTime" />
+    <result column="insert_user" jdbcType="VARCHAR" property="insertUser" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ct_id, hamster_id, ct, ct_time, insert_date_time, update_date_time, insert_user, 
+    update_user
+  </sql>
+  <select id="selectByExample" parameterType="com.example.hamster.entity.CaseTemperatureExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from public.case_temperature
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="com.example.hamster.entity.CaseTemperatureExample">
+    delete from public.case_temperature
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.example.hamster.entity.CaseTemperature">
+    insert into public.case_temperature (ct_id, hamster_id, ct, 
+      ct_time, insert_date_time, update_date_time, 
+      insert_user, update_user)
+    values (#{ctId,jdbcType=INTEGER}, #{hamsterId,jdbcType=INTEGER}, #{ct,jdbcType=NUMERIC}, 
+      #{ctTime,jdbcType=TIMESTAMP}, #{insertDateTime,jdbcType=TIMESTAMP}, #{updateDateTime,jdbcType=TIMESTAMP}, 
+      #{insertUser,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.hamster.entity.CaseTemperature">
+    insert into public.case_temperature
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="ctId != null">
+        ct_id,
+      </if>
+      <if test="hamsterId != null">
+        hamster_id,
+      </if>
+      <if test="ct != null">
+        ct,
+      </if>
+      <if test="ctTime != null">
+        ct_time,
+      </if>
+      <if test="insertDateTime != null">
+        insert_date_time,
+      </if>
+      <if test="updateDateTime != null">
+        update_date_time,
+      </if>
+      <if test="insertUser != null">
+        insert_user,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="ctId != null">
+        #{ctId,jdbcType=INTEGER},
+      </if>
+      <if test="hamsterId != null">
+        #{hamsterId,jdbcType=INTEGER},
+      </if>
+      <if test="ct != null">
+        #{ct,jdbcType=NUMERIC},
+      </if>
+      <if test="ctTime != null">
+        #{ctTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="insertDateTime != null">
+        #{insertDateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDateTime != null">
+        #{updateDateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="insertUser != null">
+        #{insertUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.example.hamster.entity.CaseTemperatureExample" resultType="java.lang.Long">
+    select count(*) from public.case_temperature
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update public.case_temperature
+    <set>
+      <if test="record.ctId != null">
+        ct_id = #{record.ctId,jdbcType=INTEGER},
+      </if>
+      <if test="record.hamsterId != null">
+        hamster_id = #{record.hamsterId,jdbcType=INTEGER},
+      </if>
+      <if test="record.ct != null">
+        ct = #{record.ct,jdbcType=NUMERIC},
+      </if>
+      <if test="record.ctTime != null">
+        ct_time = #{record.ctTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.insertDateTime != null">
+        insert_date_time = #{record.insertDateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateDateTime != null">
+        update_date_time = #{record.updateDateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.insertUser != null">
+        insert_user = #{record.insertUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update public.case_temperature
+    set ct_id = #{record.ctId,jdbcType=INTEGER},
+      hamster_id = #{record.hamsterId,jdbcType=INTEGER},
+      ct = #{record.ct,jdbcType=NUMERIC},
+      ct_time = #{record.ctTime,jdbcType=TIMESTAMP},
+      insert_date_time = #{record.insertDateTime,jdbcType=TIMESTAMP},
+      update_date_time = #{record.updateDateTime,jdbcType=TIMESTAMP},
+      insert_user = #{record.insertUser,jdbcType=VARCHAR},
+      update_user = #{record.updateUser,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+</mapper>

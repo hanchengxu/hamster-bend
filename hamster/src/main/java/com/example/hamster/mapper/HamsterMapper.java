@@ -1,16 +1,30 @@
 package com.example.hamster.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-
 import com.example.hamster.entity.Hamster;
+import com.example.hamster.entity.HamsterExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
-@Mapper
 public interface HamsterMapper {
+    long countByExample(HamsterExample example);
 
-    @Select("select * from hamster where hamster_id = #{id}")
-    Hamster findById(@Param("id") int id);
+    int deleteByExample(HamsterExample example);
 
-    Hamster findByIdXML(int id);
+    int deleteByPrimaryKey(Integer hamsterId);
+
+    int insert(Hamster record);
+
+    int insertSelective(Hamster record);
+
+    List<Hamster> selectByExample(HamsterExample example);
+
+    Hamster selectByPrimaryKey(Integer hamsterId);
+
+    int updateByExampleSelective(@Param("record") Hamster record, @Param("example") HamsterExample example);
+
+    int updateByExample(@Param("record") Hamster record, @Param("example") HamsterExample example);
+
+    int updateByPrimaryKeySelective(Hamster record);
+
+    int updateByPrimaryKey(Hamster record);
 }

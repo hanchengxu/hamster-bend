@@ -1,9 +1,329 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.hamster.mapper.HamsterMapper">
+  <resultMap id="BaseResultMap" type="com.example.hamster.entity.Hamster">
+    <id column="hamster_id" jdbcType="INTEGER" property="hamsterId" />
+    <result column="hamster_name" jdbcType="VARCHAR" property="hamsterName" />
+    <result column="hamster_height" jdbcType="NUMERIC" property="hamsterHeight" />
+    <result column="hamster_weight" jdbcType="NUMERIC" property="hamsterWeight" />
+    <result column="hamster_birthday" jdbcType="DATE" property="hamsterBirthday" />
+    <result column="hamster_kind" jdbcType="VARCHAR" property="hamsterKind" />
+    <result column="start_date" jdbcType="DATE" property="startDate" />
+    <result column="end_date" jdbcType="DATE" property="endDate" />
+    <result column="insert_date_time" jdbcType="TIMESTAMP" property="insertDateTime" />
+    <result column="update_date_time" jdbcType="TIMESTAMP" property="updateDateTime" />
+    <result column="insert_user" jdbcType="VARCHAR" property="insertUser" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    hamster_id, hamster_name, hamster_height, hamster_weight, hamster_birthday, hamster_kind, 
+    start_date, end_date, insert_date_time, update_date_time, insert_user, update_user
+  </sql>
+  <select id="selectByExample" parameterType="com.example.hamster.entity.HamsterExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from public.hamster
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from public.hamster
+    where hamster_id = #{hamsterId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from public.hamster
+    where hamster_id = #{hamsterId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.example.hamster.entity.HamsterExample">
+    delete from public.hamster
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.example.hamster.entity.Hamster">
+    insert into public.hamster (hamster_id, hamster_name, hamster_height, 
+      hamster_weight, hamster_birthday, hamster_kind, 
+      start_date, end_date, insert_date_time, 
+      update_date_time, insert_user, update_user
+      )
+    values (#{hamsterId,jdbcType=INTEGER}, #{hamsterName,jdbcType=VARCHAR}, #{hamsterHeight,jdbcType=NUMERIC}, 
+      #{hamsterWeight,jdbcType=NUMERIC}, #{hamsterBirthday,jdbcType=DATE}, #{hamsterKind,jdbcType=VARCHAR}, 
+      #{startDate,jdbcType=DATE}, #{endDate,jdbcType=DATE}, #{insertDateTime,jdbcType=TIMESTAMP}, 
+      #{updateDateTime,jdbcType=TIMESTAMP}, #{insertUser,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.hamster.entity.Hamster">
+    insert into public.hamster
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="hamsterId != null">
+        hamster_id,
+      </if>
+      <if test="hamsterName != null">
+        hamster_name,
+      </if>
+      <if test="hamsterHeight != null">
+        hamster_height,
+      </if>
+      <if test="hamsterWeight != null">
+        hamster_weight,
+      </if>
+      <if test="hamsterBirthday != null">
+        hamster_birthday,
+      </if>
+      <if test="hamsterKind != null">
+        hamster_kind,
+      </if>
+      <if test="startDate != null">
+        start_date,
+      </if>
+      <if test="endDate != null">
+        end_date,
+      </if>
+      <if test="insertDateTime != null">
+        insert_date_time,
+      </if>
+      <if test="updateDateTime != null">
+        update_date_time,
+      </if>
+      <if test="insertUser != null">
+        insert_user,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="hamsterId != null">
+        #{hamsterId,jdbcType=INTEGER},
+      </if>
+      <if test="hamsterName != null">
+        #{hamsterName,jdbcType=VARCHAR},
+      </if>
+      <if test="hamsterHeight != null">
+        #{hamsterHeight,jdbcType=NUMERIC},
+      </if>
+      <if test="hamsterWeight != null">
+        #{hamsterWeight,jdbcType=NUMERIC},
+      </if>
+      <if test="hamsterBirthday != null">
+        #{hamsterBirthday,jdbcType=DATE},
+      </if>
+      <if test="hamsterKind != null">
+        #{hamsterKind,jdbcType=VARCHAR},
+      </if>
+      <if test="startDate != null">
+        #{startDate,jdbcType=DATE},
+      </if>
+      <if test="endDate != null">
+        #{endDate,jdbcType=DATE},
+      </if>
+      <if test="insertDateTime != null">
+        #{insertDateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDateTime != null">
+        #{updateDateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="insertUser != null">
+        #{insertUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.example.hamster.entity.HamsterExample" resultType="java.lang.Long">
+    select count(*) from public.hamster
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update public.hamster
+    <set>
+      <if test="record.hamsterId != null">
+        hamster_id = #{record.hamsterId,jdbcType=INTEGER},
+      </if>
+      <if test="record.hamsterName != null">
+        hamster_name = #{record.hamsterName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.hamsterHeight != null">
+        hamster_height = #{record.hamsterHeight,jdbcType=NUMERIC},
+      </if>
+      <if test="record.hamsterWeight != null">
+        hamster_weight = #{record.hamsterWeight,jdbcType=NUMERIC},
+      </if>
+      <if test="record.hamsterBirthday != null">
+        hamster_birthday = #{record.hamsterBirthday,jdbcType=DATE},
+      </if>
+      <if test="record.hamsterKind != null">
+        hamster_kind = #{record.hamsterKind,jdbcType=VARCHAR},
+      </if>
+      <if test="record.startDate != null">
+        start_date = #{record.startDate,jdbcType=DATE},
+      </if>
+      <if test="record.endDate != null">
+        end_date = #{record.endDate,jdbcType=DATE},
+      </if>
+      <if test="record.insertDateTime != null">
+        insert_date_time = #{record.insertDateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateDateTime != null">
+        update_date_time = #{record.updateDateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.insertUser != null">
+        insert_user = #{record.insertUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update public.hamster
+    set hamster_id = #{record.hamsterId,jdbcType=INTEGER},
+      hamster_name = #{record.hamsterName,jdbcType=VARCHAR},
+      hamster_height = #{record.hamsterHeight,jdbcType=NUMERIC},
+      hamster_weight = #{record.hamsterWeight,jdbcType=NUMERIC},
+      hamster_birthday = #{record.hamsterBirthday,jdbcType=DATE},
+      hamster_kind = #{record.hamsterKind,jdbcType=VARCHAR},
+      start_date = #{record.startDate,jdbcType=DATE},
+      end_date = #{record.endDate,jdbcType=DATE},
+      insert_date_time = #{record.insertDateTime,jdbcType=TIMESTAMP},
+      update_date_time = #{record.updateDateTime,jdbcType=TIMESTAMP},
+      insert_user = #{record.insertUser,jdbcType=VARCHAR},
+      update_user = #{record.updateUser,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.hamster.entity.Hamster">
+    update public.hamster
+    <set>
+      <if test="hamsterName != null">
+        hamster_name = #{hamsterName,jdbcType=VARCHAR},
+      </if>
+      <if test="hamsterHeight != null">
+        hamster_height = #{hamsterHeight,jdbcType=NUMERIC},
+      </if>
+      <if test="hamsterWeight != null">
+        hamster_weight = #{hamsterWeight,jdbcType=NUMERIC},
+      </if>
+      <if test="hamsterBirthday != null">
+        hamster_birthday = #{hamsterBirthday,jdbcType=DATE},
+      </if>
+      <if test="hamsterKind != null">
+        hamster_kind = #{hamsterKind,jdbcType=VARCHAR},
+      </if>
+      <if test="startDate != null">
+        start_date = #{startDate,jdbcType=DATE},
+      </if>
+      <if test="endDate != null">
+        end_date = #{endDate,jdbcType=DATE},
+      </if>
+      <if test="insertDateTime != null">
+        insert_date_time = #{insertDateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDateTime != null">
+        update_date_time = #{updateDateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="insertUser != null">
+        insert_user = #{insertUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where hamster_id = #{hamsterId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.hamster.entity.Hamster">
+    update public.hamster
+    set hamster_name = #{hamsterName,jdbcType=VARCHAR},
+      hamster_height = #{hamsterHeight,jdbcType=NUMERIC},
+      hamster_weight = #{hamsterWeight,jdbcType=NUMERIC},
+      hamster_birthday = #{hamsterBirthday,jdbcType=DATE},
+      hamster_kind = #{hamsterKind,jdbcType=VARCHAR},
+      start_date = #{startDate,jdbcType=DATE},
+      end_date = #{endDate,jdbcType=DATE},
+      insert_date_time = #{insertDateTime,jdbcType=TIMESTAMP},
+      update_date_time = #{updateDateTime,jdbcType=TIMESTAMP},
+      insert_user = #{insertUser,jdbcType=VARCHAR},
+      update_user = #{updateUser,jdbcType=VARCHAR}
+    where hamster_id = #{hamsterId,jdbcType=INTEGER}
+  </update>
 
 
-    <select id="findByIdXML" parameterType="Integer"  resultType="com.example.hamster.entity.Hamster">
+    <select id="findByIdXML" parameterType="Integer" resultType="com.example.hamster.entity.Hamster">
         select * from hamster where hamster_id = #{id} ;
     </select>
 

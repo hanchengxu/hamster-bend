@@ -36,11 +36,12 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
-	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.0.1'
+	implementation group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '2.0.0'
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
 	compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.12'
-	runtimeOnly 'org.postgresql:postgresql'
+	//runtimeOnly 'org.postgresql:postgresql'
 	compile 'com.alibaba:fastjson:1.2.76'
+	compile fileTree(dir:'lib',include:['*.jar'])
 }
 
 test {

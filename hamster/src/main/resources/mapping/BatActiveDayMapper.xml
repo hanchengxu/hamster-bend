@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.hamster.mapper.ActiveMapper">
-  <resultMap id="BaseResultMap" type="com.example.hamster.entity.Active">
-    <id column="active_id" jdbcType="INTEGER" property="activeId" />
-    <result column="hamster_id" jdbcType="INTEGER" property="hamsterId" />
-    <result column="lap_count" jdbcType="INTEGER" property="lapCount" />
+<mapper namespace="com.example.hamster.mapper.BatActiveDayMapper">
+  <resultMap id="BaseResultMap" type="com.example.hamster.entity.BatActiveDay">
+    <id column="hamster_id" jdbcType="SMALLINT" property="hamsterId" />
+    <id column="active_date" jdbcType="DATE" property="activeDate" />
+    <result column="total_lap" jdbcType="INTEGER" property="totalLap" />
     <result column="insert_date_time" jdbcType="TIMESTAMP" property="insertDateTime" />
     <result column="insert_user" jdbcType="VARCHAR" property="insertUser" />
   </resultMap>
@@ -67,17 +67,16 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    active_id, hamster_id, lap_count, insert_date_time, insert_user
+    hamster_id, active_date, total_lap, insert_date_time, insert_user
   </sql>
-  
-  <select id="selectByExample" parameterType="com.example.hamster.entity.ActiveExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.example.hamster.entity.BatActiveDayExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     'true' as QUERYID,
     <include refid="Base_Column_List" />
-    from public.active
+    from public.bat_active_day
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -85,44 +84,41 @@
       order by ${orderByClause}
     </if>
   </select>
-  
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select 
     <include refid="Base_Column_List" />
-    from public.active
-    where active_id = #{activeId,jdbcType=INTEGER}
+    from public.bat_active_day
+    where hamster_id = #{hamsterId,jdbcType=SMALLINT}
+      and active_date = #{activeDate,jdbcType=DATE}
   </select>
-  
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from public.active
-    where active_id = #{activeId,jdbcType=INTEGER}
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from public.bat_active_day
+    where hamster_id = #{hamsterId,jdbcType=SMALLINT}
+      and active_date = #{activeDate,jdbcType=DATE}
   </delete>
-  
-  <delete id="deleteByExample" parameterType="com.example.hamster.entity.ActiveExample">
-    delete from public.active
+  <delete id="deleteByExample" parameterType="com.example.hamster.entity.BatActiveDayExample">
+    delete from public.bat_active_day
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  
-  <insert id="insert" parameterType="com.example.hamster.entity.Active">
-    insert into public.active (active_id, hamster_id, lap_count,
+  <insert id="insert" parameterType="com.example.hamster.entity.BatActiveDay">
+    insert into public.bat_active_day (hamster_id, active_date, total_lap, 
       insert_date_time, insert_user)
-    values (#{activeId,jdbcType=INTEGER}, #{hamsterId,jdbcType=INTEGER}, #{lapCount,jdbcType=INTEGER},
+    values (#{hamsterId,jdbcType=SMALLINT}, #{activeDate,jdbcType=DATE}, #{totalLap,jdbcType=INTEGER}, 
       #{insertDateTime,jdbcType=TIMESTAMP}, #{insertUser,jdbcType=VARCHAR})
   </insert>
-  
-  <insert id="insertSelective" parameterType="com.example.hamster.entity.Active">
-    insert into public.active
+  <insert id="insertSelective" parameterType="com.example.hamster.entity.BatActiveDay">
+    insert into public.bat_active_day
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="activeId != null">
-        active_id,
-      </if>
       <if test="hamsterId != null">
         hamster_id,
       </if>
-      <if test="lapCount != null">
-        lap_count,
+      <if test="activeDate != null">
+        active_date,
+      </if>
+      <if test="totalLap != null">
+        total_lap,
       </if>
       <if test="insertDateTime != null">
         insert_date_time,
@@ -132,14 +128,14 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="activeId != null">
-        #{activeId,jdbcType=INTEGER},
-      </if>
       <if test="hamsterId != null">
-        #{hamsterId,jdbcType=INTEGER},
+        #{hamsterId,jdbcType=SMALLINT},
       </if>
-      <if test="lapCount != null">
-        #{lapCount,jdbcType=INTEGER},
+      <if test="activeDate != null">
+        #{activeDate,jdbcType=DATE},
+      </if>
+      <if test="totalLap != null">
+        #{totalLap,jdbcType=INTEGER},
       </if>
       <if test="insertDateTime != null">
         #{insertDateTime,jdbcType=TIMESTAMP},
@@ -149,25 +145,23 @@
       </if>
     </trim>
   </insert>
-  
-  <select id="countByExample" parameterType="com.example.hamster.entity.ActiveExample" resultType="java.lang.Long">
-    select count(*) from public.active
+  <select id="countByExample" parameterType="com.example.hamster.entity.BatActiveDayExample" resultType="java.lang.Long">
+    select count(*) from public.bat_active_day
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  
   <update id="updateByExampleSelective" parameterType="map">
-    update public.active
+    update public.bat_active_day
     <set>
-      <if test="record.activeId != null">
-        active_id = #{record.activeId,jdbcType=INTEGER},
-      </if>
       <if test="record.hamsterId != null">
-        hamster_id = #{record.hamsterId,jdbcType=INTEGER},
+        hamster_id = #{record.hamsterId,jdbcType=SMALLINT},
       </if>
-      <if test="record.lapCount != null">
-        lap_count = #{record.lapCount,jdbcType=INTEGER},
+      <if test="record.activeDate != null">
+        active_date = #{record.activeDate,jdbcType=DATE},
+      </if>
+      <if test="record.totalLap != null">
+        total_lap = #{record.totalLap,jdbcType=INTEGER},
       </if>
       <if test="record.insertDateTime != null">
         insert_date_time = #{record.insertDateTime,jdbcType=TIMESTAMP},
@@ -180,27 +174,22 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  
   <update id="updateByExample" parameterType="map">
-    update public.active
-    set active_id = #{record.activeId,jdbcType=INTEGER},
-      hamster_id = #{record.hamsterId,jdbcType=INTEGER},
-      lap_count = #{record.lapCount,jdbcType=INTEGER},
+    update public.bat_active_day
+    set hamster_id = #{record.hamsterId,jdbcType=SMALLINT},
+      active_date = #{record.activeDate,jdbcType=DATE},
+      total_lap = #{record.totalLap,jdbcType=INTEGER},
       insert_date_time = #{record.insertDateTime,jdbcType=TIMESTAMP},
       insert_user = #{record.insertUser,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  
-  <update id="updateByPrimaryKeySelective" parameterType="com.example.hamster.entity.Active">
-    update public.active
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.hamster.entity.BatActiveDay">
+    update public.bat_active_day
     <set>
-      <if test="hamsterId != null">
-        hamster_id = #{hamsterId,jdbcType=INTEGER},
-      </if>
-      <if test="lapCount != null">
-        lap_count = #{lapCount,jdbcType=INTEGER},
+      <if test="totalLap != null">
+        total_lap = #{totalLap,jdbcType=INTEGER},
       </if>
       <if test="insertDateTime != null">
         insert_date_time = #{insertDateTime,jdbcType=TIMESTAMP},
@@ -209,66 +198,15 @@
         insert_user = #{insertUser,jdbcType=VARCHAR},
       </if>
     </set>
-    where active_id = #{activeId,jdbcType=INTEGER}
+    where hamster_id = #{hamsterId,jdbcType=SMALLINT}
+      and active_date = #{activeDate,jdbcType=DATE}
   </update>
-  
-  <update id="updateByPrimaryKey" parameterType="com.example.hamster.entity.Active">
-    update public.active
-    set hamster_id = #{hamsterId,jdbcType=INTEGER},
-      lap_count = #{lapCount,jdbcType=INTEGER},
+  <update id="updateByPrimaryKey" parameterType="com.example.hamster.entity.BatActiveDay">
+    update public.bat_active_day
+    set total_lap = #{totalLap,jdbcType=INTEGER},
       insert_date_time = #{insertDateTime,jdbcType=TIMESTAMP},
       insert_user = #{insertUser,jdbcType=VARCHAR}
-    where active_id = #{activeId,jdbcType=INTEGER}
+    where hamster_id = #{hamsterId,jdbcType=SMALLINT}
+      and active_date = #{activeDate,jdbcType=DATE}
   </update>
-
-	<resultMap id="selectLapCountByMonthResult" type="java.util.HashMap">
-        <result column="month" jdbcType="VARCHAR" property="month" />
-        <result column="total" jdbcType="INTEGER" property="total" />
-	</resultMap>
-
-    <select id="selectLapCountByMonth" parameterType="Integer" resultType="java.util.HashMap">
-          select
-          	to_char(insert_date_time,'yyyy年 MM月') as month,
-          	(max(lap_count)-min(lap_count)) as total
-          from
-          	active
-		  where
-		  	insert_date_time between to_timestamp('2021-01-01','YYYY-MM-DD') and now()
-		  and
-		  	hamster_id = #{id}
-		  group by month
-		  order by month;
-    </select>
-
-    <select id="selectLapCountByDay" parameterType="Integer" resultType="java.util.HashMap">
-    	select
-		 to_char(insert_date_time,'yyyy-MM-DD') as day ,
-		 (max(lap_count)-min(lap_count)) as total
-		from active
-		where
-			hamster_id = #{id}
-		and
-		  	insert_date_time between to_timestamp('2021-01-01','YYYY-MM-DD') and now()
-		group by day
-		order by day;
-    </select>
-
-    <select id="selectScatterByHour" resultType="java.util.HashMap">
-    	with temp_t as (
-			select max(lap_count)-min(lap_count) as lap_count ,
-			to_char(insert_date_time,'YYYY-MM-DD-HH24') as day_time
-			from active group by to_char(insert_date_time,'YYYY-MM-DD-HH24') order by to_char(insert_date_time,'YYYY-MM-DD-HH24') desc
-		)
-		select
-			avg(lap_count)::int as lap_count,
-			split_part(temp_t.day_time ,'-', 4) as day_time
-		from
-			temp_t
-		group by
-			split_part(temp_t.day_time ,'-', 4)
-		order by
-			to_number(split_part(temp_t.day_time ,'-', 4),'99');
-    </select>
-
-
 </mapper>

@@ -3,12 +3,12 @@ package com.example.hamster.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Active implements Serializable {
-    private Integer activeId;
+public class BatActiveDay implements Serializable {
+    private Short hamsterId;
 
-    private Integer hamsterId;
+    private Date activeDate;
 
-    private Integer lapCount;
+    private Integer totalLap;
 
     private Date insertDateTime;
 
@@ -16,28 +16,28 @@ public class Active implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getActiveId() {
-        return activeId;
-    }
-
-    public void setActiveId(Integer activeId) {
-        this.activeId = activeId;
-    }
-
-    public Integer getHamsterId() {
+    public Short getHamsterId() {
         return hamsterId;
     }
 
-    public void setHamsterId(Integer hamsterId) {
+    public void setHamsterId(Short hamsterId) {
         this.hamsterId = hamsterId;
     }
 
-    public Integer getLapCount() {
-        return lapCount;
+    public Date getActiveDate() {
+        return activeDate;
     }
 
-    public void setLapCount(Integer lapCount) {
-        this.lapCount = lapCount;
+    public void setActiveDate(Date activeDate) {
+        this.activeDate = activeDate;
+    }
+
+    public Integer getTotalLap() {
+        return totalLap;
+    }
+
+    public void setTotalLap(Integer totalLap) {
+        this.totalLap = totalLap;
     }
 
     public Date getInsertDateTime() {

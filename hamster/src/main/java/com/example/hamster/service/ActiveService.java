@@ -15,11 +15,12 @@ import com.example.hamster.mapper.ActiveMapper;
 
 @Service
 public class ActiveService {
+
     @Autowired
     ActiveMapper activeMapper;
 
     public void insertOne(Active active) {
-        activeMapper.insertOne(active);
+        activeMapper.insertSelective(active);
     }
 
     /**
@@ -27,7 +28,7 @@ public class ActiveService {
      */
     public Integer findLapCount(GetActiveBean getActiveBean) {
 
-        int lapCount = 0;
+        Integer lapCount = 0;
 
         SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
@@ -41,10 +42,11 @@ public class ActiveService {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+
             List<Active> activeList = activeMapper.selectLapCountByDate(getActiveBean.getHamsterId(), startTime, endTime);
 
-            int maxCount = activeList.get(0).getLap_count();
-            int mixCount = activeList.get(activeList.size() - 1).getLap_count();
+            int maxCount = activeList.get(0).getLapCount();
+            int mixCount = activeList.get(activeList.size() - 1).getLapCount();
 
             lapCount = maxCount - mixCount;
 
@@ -52,7 +54,7 @@ public class ActiveService {
 
             Active active = activeMapper.selectMapLapCount(getActiveBean.getHamsterId());
 
-            lapCount = active.getLap_count();
+            lapCount = active.getLapCount();
         }
 
         return lapCount;

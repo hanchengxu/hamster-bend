@@ -1,34 +1,47 @@
 package com.example.hamster.mapper;
 
+import com.example.hamster.entity.Active;
+import com.example.hamster.entity.ActiveExample;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
-import com.example.hamster.entity.Active;
-
-@Mapper
 public interface ActiveMapper {
+    long countByExample(ActiveExample example);
 
-    @Insert("insert into active(hamster_id,lap_count,insert_date_time,insert_user) "
-            + "values(#{hamster_id},#{lap_count},#{insert_date_time},#{insert_user})")
-    @Options(useGeneratedKeys = true, keyColumn = "active_id", keyProperty = "active_id")
-     public void insertOne(Active active);
+    int deleteByExample(ActiveExample example);
 
-	@Select("select * from active where insert_date_time BETWEEN #{startTime} AND #{endTime}  and hamster_id =#{hamsterId} order by insert_date_time desc")
-	public List<Active> selectLapCountByDate(@Param("hamsterId") int hamsterId, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
+    int deleteByPrimaryKey(Integer activeId);
 
-	@Select("select * from active where  hamster_id =#{hamsterId} order by lap_count desc limit 1")
-	public Active selectMapLapCount(@Param("hamsterId") int hamsterId);
+    int insert(Active record);
 
-	public List<Map<String, Object>> selectLapCountByMonth(int id);
+    int insertSelective(Active record);
 
-	public List<Map<String, Object>> selectLapCountByDay(int id);
+    List<Active> selectByExample(ActiveExample example);
 
-	public List<Map<String, Object>> selectScatterByHour();
+    Active selectByPrimaryKey(Integer activeId);
+
+    int updateByExampleSelective(@Param("record") Active record, @Param("example") ActiveExample example);
+
+    int updateByExample(@Param("record") Active record, @Param("example") ActiveExample example);
+
+    int updateByPrimaryKeySelective(Active record);
+
+    int updateByPrimaryKey(Active record);
+
+    @Select("select * from active where insert_date_time BETWEEN #{startTime} AND #{endTime}  and hamster_id =#{hamsterId} order by insert_date_time desc")
+   	public List<Active> selectLapCountByDate(@Param("hamsterId") int hamsterId, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
+
+    @Select("select * from active where hamster_id =#{hamsterId} order by lap_count desc limit 1")
+   	public Active selectMapLapCount(@Param("hamsterId") int hamsterId);
+
+   	public List<Map<String, Object>> selectLapCountByMonth(int id);
+
+   	public List<Map<String, Object>> selectLapCountByDay(int id);
+
+   	public List<Map<String, Object>> selectScatterByHour();
 }

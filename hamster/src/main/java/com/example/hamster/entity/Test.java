@@ -3,10 +3,10 @@ package com.example.hamster.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Active implements Serializable {
+public class Test implements Serializable {
     private Integer activeId;
 
-    private Integer hamsterId;
+    private Short hamsterId;
 
     private Integer lapCount;
 
@@ -24,11 +24,11 @@ public class Active implements Serializable {
         this.activeId = activeId;
     }
 
-    public Integer getHamsterId() {
+    public Short getHamsterId() {
         return hamsterId;
     }
 
-    public void setHamsterId(Integer hamsterId) {
+    public void setHamsterId(Short hamsterId) {
         this.hamsterId = hamsterId;
     }
 
