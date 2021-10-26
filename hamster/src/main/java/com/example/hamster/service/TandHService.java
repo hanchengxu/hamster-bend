@@ -33,7 +33,7 @@ public class TandHService {
 	public ResultMsg save(SaveTandHBean saveTandHBean) {
 		ResultMsg result = new ResultMsg();
 
-		if(null != saveTandHBean.getCaseH()) {
+		if(null != saveTandHBean.getCaseT()) {
 			CaseTemperature entity = new CaseTemperature();
 
 			entity.setHamsterId(saveTandHBean.getHamsterId());
@@ -47,7 +47,7 @@ public class TandHService {
 			caseTMapper.insertSelective(entity);
 		}
 
-		if(null != saveTandHBean.getCaseT()) {
+		if(null != saveTandHBean.getCaseH()) {
 			CaseHumidity entity = new CaseHumidity();
 
 			entity.setHamsterId(saveTandHBean.getHamsterId());
