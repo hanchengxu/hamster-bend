@@ -7,14 +7,13 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class SaveTandHBean {
+public class SaveTandHBean{
 
-    private Integer hamsterId;
+	private Integer hamsterId;
 
     private Integer caseT;//环境温度
 
     private Integer caseH;//环境湿度
 
     private Integer heaterT;//加热垫温度
-
 }
