@@ -253,11 +253,14 @@
 		order by day;
     </select>
 
-    <select id="selectScatterByHour" resultType="java.util.HashMap">
+    <select id="selectScatterByHour" parameterType="Integer" resultType="java.util.HashMap">
     	with temp_t as (
 			select max(lap_count)-min(lap_count) as lap_count ,
 			to_char(insert_date_time,'YYYY-MM-DD-HH24') as day_time
-			from active group by to_char(insert_date_time,'YYYY-MM-DD-HH24') order by to_char(insert_date_time,'YYYY-MM-DD-HH24') desc
+			from active
+			where hamster_id = #{id}
+			group by to_char(insert_date_time,'YYYY-MM-DD-HH24') 
+			order by to_char(insert_date_time,'YYYY-MM-DD-HH24') desc
 		)
 		select
 			avg(lap_count)::int as lap_count,

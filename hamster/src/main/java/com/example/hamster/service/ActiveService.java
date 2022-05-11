@@ -71,8 +71,8 @@ public class ActiveService {
 		return lapCountByDayList;
     }
 
-    public  List<Map<String, Object>> getScatterByHour() {
-        List<Map<String, Object>> scatterByHour = activeMapper.selectScatterByHour();
+    public  List<Map<String, Object>> getScatterByHour(Integer hamsterId) {
+        List<Map<String, Object>> scatterByHour = activeMapper.selectScatterByHour(hamsterId);
         return scatterByHour;
     }
 

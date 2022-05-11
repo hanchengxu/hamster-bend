@@ -9,8 +9,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
 import com.example.hamster.controller.bean.GetActiveBean;
+import com.example.hamster.controller.bean.IncrementLapBean;
 import com.example.hamster.controller.bean.SaveActiveBean;
 import com.example.hamster.entity.Active;
 import com.example.hamster.service.ActiveService;
@@ -27,157 +32,174 @@ import com.zaxxer.hikari.HikariDataSource;
 @RestController
 public class ActiveController {
 
-    @Autowired
-    ActiveService activeService;
+	@Autowired
+	ActiveService activeService;
 
-    @Autowired
-    private ApplicationContext applicationContext;
+	@Autowired
+	private ApplicationContext applicationContext;
 
-    /**
-     * save lap_count from mqtt
-     */
-    @RequestMapping("saveActive")
-    public String saveActive(@RequestBody SaveActiveBean activeBean) {
+	@Autowired
+	private RedisTemplate<String, Object> redisTemplate;
 
-    	Active active = new Active();
-    	active.setHamsterId(activeBean.getMsg().get(0));
-    	active.setLapCount(activeBean.getMsg().get(1));
-    	active.setInsertDateTime(new Date());
-    	active.setInsertUser("system");
+	private static final Logger logger = LoggerFactory.getLogger(ActiveController.class);
 
-        activeService.insertOne(active);
+	/**
+	 * save lap_count from mqtt
+	 */
+	@RequestMapping("saveActive")
+	public String saveActive(@RequestBody SaveActiveBean activeBean) {
 
-        return "OK";
-    }
+		Active active = new Active();
+		active.setHamsterId(activeBean.getMsg().get(0));
+		active.setLapCount(activeBean.getMsg().get(1));
+		active.setInsertDateTime(new Date());
+		active.setInsertUser("system");
 
-    /**
-     * get laps between a time quantum
-     * getActiveBean.startDate and endDate String format: yyyy-MM-dd hh:mm:ss
-     * @param getActiveBean
-     * @return
-     */
-    @RequestMapping(value= "getLapCount",method=RequestMethod.POST,produces = "application/json;charset=utf-8")
-    public String getlapCount(@RequestBody GetActiveBean getActiveBean) {
+		activeService.insertOne(active);
 
-        Integer lapCount = activeService.findLapCount(getActiveBean);
+		return "OK";
+	}
 
-        return "{\"lapCount\":"+lapCount+"}";
-    }
+	/**
+	 * get laps between a time quantum getActiveBean.startDate and endDate String
+	 * format: yyyy-MM-dd hh:mm:ss
+	 * 
+	 * @param getActiveBean
+	 * @return
+	 */
+	@RequestMapping(value = "getLapCount", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public String getlapCount(@RequestBody GetActiveBean getActiveBean) {
 
-    /**
-     * get total laps from active table by hamsterId
-     * @param hamsterId
-     * @return
-     */
-    @RequestMapping(value= "getMaxLapCount",method=RequestMethod.GET,produces = "application/json;charset=utf-8")
-    public String getMaxLapCount(@RequestParam(name = "hamsterId", required = true) Integer hamsterId) {
+		Integer lapCount = activeService.findLapCount(getActiveBean);
 
-        if(null == hamsterId) {
-            return null;
-        }
+		return "{\"lapCount\":" + lapCount + "}";
+	}
 
-        GetActiveBean bean = new GetActiveBean();
-        bean.setHamsterId(hamsterId);
+	/**
+	 * get total laps from active table by hamsterId
+	 * 
+	 * @param hamsterId
+	 * @return
+	 */
+	@RequestMapping(value = "getMaxLapCount", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public String getMaxLapCount(@RequestParam(name = "hamsterId", required = true) Integer hamsterId) {
 
-        Integer lapCount = activeService.findLapCount(bean);
+		if (null == hamsterId) {
+			return null;
+		}
 
-        return "{\"lapCount\":"+lapCount+"}";
-    }
+		GetActiveBean bean = new GetActiveBean();
+		bean.setHamsterId(hamsterId);
 
+		Integer lapCount = activeService.findLapCount(bean);
 
-    @RequestMapping(value= "getLapCountByMonth",method=RequestMethod.GET,produces = "application/json;charset=utf-8")
-    public String getLapCountByMonth() {
-    	List<Map<String, Object>> lapList = activeService.getLapCountByMonth(1);
+		return "{\"lapCount\":" + lapCount + "}";
+	}
 
-    	List<String> xAxisData = new ArrayList<String>();
-    	List<Integer> seriesData = new ArrayList<Integer>();
-    	for(Map<String, Object> map: lapList) {
-    		xAxisData.add((String)map.get("month"));
-    		seriesData.add((Integer)map.get("total"));
-    	}
-    	String seriesDataStr = JSON.toJSONString(seriesData);
-    	String xAxisDataStr = JSON.toJSONString(xAxisData);
-    	//echart JSON
-    	StringBuffer bf = new StringBuffer();
-    	bf.append("{");
-    	bf.append("\"xAxis\": {\"data\":");
-    	bf.append(xAxisDataStr).append("},");
-    	bf.append("\"yAxis\": {},");
-    	bf.append("\"series\": [{\"name\": \"圈数\",\"type\": \"bar\",\"data\":");
-    	bf.append(seriesDataStr).append("}]");
-    	bf.append("}");
+	@RequestMapping(value = "getLapCountByMonth", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public String getLapCountByMonth(@RequestParam(name = "hamsterId", required = true) Integer hamsterId) {
 
-    	return bf.toString();
-    }
+		List<Map<String, Object>> lapList = activeService.getLapCountByMonth(hamsterId);
 
-    @RequestMapping(value= "getLapCountByDay",method=RequestMethod.GET,produces = "application/json;charset=utf-8")
-    public String getLapCountByDay() {
-    	List<Map<String, Object>> lapList = activeService.getLapCountByDay(1);
+		List<String> xAxisData = new ArrayList<String>();
+		List<Integer> seriesData = new ArrayList<Integer>();
+		for (Map<String, Object> map : lapList) {
+			xAxisData.add((String) map.get("month"));
+			seriesData.add((Integer) map.get("total"));
+		}
+		String seriesDataStr = JSON.toJSONString(seriesData);
+		String xAxisDataStr = JSON.toJSONString(xAxisData);
+		// echart JSON
+		StringBuffer bf = new StringBuffer();
+		bf.append("{");
+		bf.append("\"xAxis\": {\"data\":");
+		bf.append(xAxisDataStr).append("},");
+		bf.append("\"yAxis\": {},");
+		bf.append("\"series\": [{\"name\": \"圈数\",\"type\": \"bar\",\"data\":");
+		bf.append(seriesDataStr).append("}]");
+		bf.append("}");
 
-    	List<String> xAxisData = new ArrayList<String>();
-    	List<Integer> seriesData = new ArrayList<Integer>();
-    	for(Map<String, Object> map: lapList) {
-    		xAxisData.add((String)map.get("day"));
-    		seriesData.add((Integer)map.get("total"));
-    	}
-    	String seriesDataStr = JSON.toJSONString(seriesData);
-    	String xAxisDataStr = JSON.toJSONString(xAxisData);
-    	//echart JSON
-    	StringBuffer bf = new StringBuffer();
-    	bf.append("{");
-    	bf.append("\"xAxis\": ");
-    	bf.append(xAxisDataStr).append(",");
-    	bf.append("\"series\": ");
-    	bf.append(seriesDataStr);
-    	bf.append("}");
+		return bf.toString();
+	}
 
-    	return bf.toString();
-    }
+	@RequestMapping(value = "getLapCountByDay", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public String getLapCountByDay() {
+		List<Map<String, Object>> lapList = activeService.getLapCountByDay(1);
 
-    @RequestMapping(value= "getScatterByHour",method=RequestMethod.GET,produces = "application/json;charset=utf-8")
-    public String  getScatterByHour() {
-        List<Map<String, Object>>  lapList = activeService.getScatterByHour();
-        List<String> xAxisData = new ArrayList<String>();
-        List<Integer> seriesData = new ArrayList<Integer>();
-        lapList.stream().forEach( mapData -> {
-            xAxisData.add((String)mapData.get("day_time"));
-            seriesData.add((Integer)mapData.get("lap_count"));
-        });
+		List<String> xAxisData = new ArrayList<String>();
+		List<Integer> seriesData = new ArrayList<Integer>();
+		for (Map<String, Object> map : lapList) {
+			xAxisData.add((String) map.get("day"));
+			seriesData.add((Integer) map.get("total"));
+		}
+		String seriesDataStr = JSON.toJSONString(seriesData);
+		String xAxisDataStr = JSON.toJSONString(xAxisData);
+		// echart JSON
+		StringBuffer bf = new StringBuffer();
+		bf.append("{");
+		bf.append("\"xAxis\": ");
+		bf.append(xAxisDataStr).append(",");
+		bf.append("\"series\": ");
+		bf.append(seriesDataStr);
+		bf.append("}");
 
-        String seriesDataStr = JSON.toJSONString(seriesData);
-        String xAxisDataStr = JSON.toJSONString(xAxisData);
-        //echart JSON
-        StringBuffer bf = new StringBuffer();
-        bf.append("{");
-        bf.append("\"xAxis\": ");
-        bf.append(xAxisDataStr).append(",");
-        bf.append("\"series\": ");
-        bf.append(seriesDataStr);
-        bf.append("}");
+		return bf.toString();
+	}
 
-        return bf.toString();
-    }
+	@RequestMapping(value = "getScatterByHour", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public String getScatterByHour() {
+		List<Map<String, Object>> lapList = activeService.getScatterByHour(1);
+		List<String> xAxisData = new ArrayList<String>();
+		List<Integer> seriesData = new ArrayList<Integer>();
+		lapList.stream().forEach(mapData -> {
+			xAxisData.add((String) mapData.get("day_time"));
+			seriesData.add((Integer) mapData.get("lap_count"));
+		});
 
+		String seriesDataStr = JSON.toJSONString(seriesData);
+		String xAxisDataStr = JSON.toJSONString(xAxisData);
+		// echart JSON
+		StringBuffer bf = new StringBuffer();
+		bf.append("{");
+		bf.append("\"xAxis\": ");
+		bf.append(xAxisDataStr).append(",");
+		bf.append("\"series\": ");
+		bf.append(seriesDataStr);
+		bf.append("}");
 
+		return bf.toString();
+	}
 
-    @SuppressWarnings({ "unused", "rawtypes", "unchecked" })
-	@RequestMapping(value="testPool")
-    public String testPool() throws ClassNotFoundException {
-    	Class clazz = Class.forName("com.zaxxer.hikari.HikariDataSource");
-    	HikariDataSource dataSource = (HikariDataSource) applicationContext.getBean(clazz);
-    	Connection conn = null;
-    	ResultSet rs = null;
-    	Statement stmt = null;
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@RequestMapping(value = "testPool")
+	public String testPool() throws ClassNotFoundException {
+		Class clazz = Class.forName("com.zaxxer.hikari.HikariDataSource");
+		// load from spring
+		HikariDataSource dataSource = (HikariDataSource) applicationContext.getBean(clazz);
+		if (null != dataSource.getPoolName() && dataSource.getPoolName().equals("TestPool")) {
+			logger.info("TestPool:same DataPool...");
+		} else {
+			dataSource.setMaximumPoolSize(2);
+			dataSource.setMinimumIdle(1);
+			// 超过10s 如果还无法从连接池获取连接，那么就会报错
+			dataSource.setConnectionTimeout(1000 * 10);
+			dataSource.setPoolName("TestPool");
+			logger.info("difference DataPool...");
+		}
+
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement stmt = null;
 //    	throw new RuntimeException("Test Exception");
-    	try {
-    		conn = dataSource.getConnection();
-    		String sql ="select * from active order by insert_date_time desc limit 1";
-    		stmt =conn.createStatement();
-    		rs=stmt.executeQuery(sql);
-    		while(rs.next()) {
-    			int activeId = rs.getInt(1);
-    			System.out.println(activeId);
-    		}
+		try {
+			conn = dataSource.getConnection();
+			String sql = "select * from active order by insert_date_time desc limit 1";
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+//    		while(rs.next()) {
+//    			int activeId = rs.getInt(1);
+//    			System.out.println(activeId);
+//    		}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -189,6 +211,20 @@ public class ActiveController {
 			}
 		}
 		return "{1}";
-    }
+	}
+
+	/**
+	 * increm lapcount from mqtt broker
+	 * 
+	 * @param bean
+	 */
+	@PostMapping(value = "incrementLap")
+	public void incrementLap(@RequestBody IncrementLapBean bean) {
+
+		if (null != bean.getHamsterId()) {
+			redisTemplate.opsForValue().increment(bean.getHamsterId().toString());
+		}
+
+	}
 
 }

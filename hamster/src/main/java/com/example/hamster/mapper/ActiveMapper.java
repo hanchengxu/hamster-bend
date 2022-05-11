@@ -1,14 +1,14 @@
 package com.example.hamster.mapper;
 
-import com.example.hamster.entity.Active;
-import com.example.hamster.entity.ActiveExample;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+
+import com.example.hamster.entity.Active;
+import com.example.hamster.entity.ActiveExample;
 
 public interface ActiveMapper {
     long countByExample(ActiveExample example);
@@ -38,10 +38,13 @@ public interface ActiveMapper {
 
     @Select("select * from active where hamster_id =#{hamsterId} order by lap_count desc limit 1")
    	public Active selectMapLapCount(@Param("hamsterId") int hamsterId);
+    
+    @Select("select hamster_id,max(lap_count) as max_lap from active group by hamster_id")
+    List<Map<String, Object>> selectAllMaxLapCount();
 
    	public List<Map<String, Object>> selectLapCountByMonth(int id);
 
    	public List<Map<String, Object>> selectLapCountByDay(int id);
 
-   	public List<Map<String, Object>> selectScatterByHour();
+   	public List<Map<String, Object>> selectScatterByHour(int id);
 }

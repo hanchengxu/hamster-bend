@@ -5,10 +5,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 
 @SpringBootApplication
 @MapperScan({"com.example.hamster.mapper"})
+@EnableScheduling
 public class HamsterApplication extends SpringBootServletInitializer{
 
 	public static void main(String[] args) {
@@ -17,7 +19,7 @@ public class HamsterApplication extends SpringBootServletInitializer{
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application){
-        //找到原先的启动类
         return application.sources(HamsterApplication.class);
     }
+    
 }
