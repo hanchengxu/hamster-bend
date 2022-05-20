@@ -1,5 +1,6 @@
 package com.example.hamster.mapper;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -35,11 +36,28 @@ public interface ActiveMapper {
 
     @Select("select * from active where insert_date_time BETWEEN #{startTime} AND #{endTime}  and hamster_id =#{hamsterId} order by insert_date_time desc")
    	public List<Active> selectLapCountByDate(@Param("hamsterId") int hamsterId, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
+    
+    @Select("select hamster_id, max(lap_count)-min(lap_count)as day_lap "
+    		+ "from active "
+    		+ "where insert_date_time BETWEEN #{startTime} AND #{endTime}  "
+    		+ "and hamster_id =#{hamsterId} "
+    		+ "group by hamster_id")
+   	public Map<String,Object> selectDayLap(@Param("hamsterId") int hamsterId, 
+   			@Param("startTime") LocalDateTime startTime, 
+   			@Param("endTime") LocalDateTime endTime);
 
     @Select("select * from active where hamster_id =#{hamsterId} order by lap_count desc limit 1")
    	public Active selectMapLapCount(@Param("hamsterId") int hamsterId);
     
-    @Select("select hamster_id,max(lap_count) as max_lap from active group by hamster_id")
+    @Select("select hamster.hamster_id,"
+    		+ " case "
+    		+ " when max(active.lap_count) is null then 0 "
+    		+ " else max(active.lap_count)::int4 end as max_lap "
+    		+ " from "
+    		+ " hamster "
+    		+ " left join active  "
+    		+ " on hamster.hamster_id = active.hamster_id "
+    		+ " group by hamster.hamster_id ")
     List<Map<String, Object>> selectAllMaxLapCount();
 
    	public List<Map<String, Object>> selectLapCountByMonth(int id);
@@ -47,4 +65,5 @@ public interface ActiveMapper {
    	public List<Map<String, Object>> selectLapCountByDay(int id);
 
    	public List<Map<String, Object>> selectScatterByHour(int id);
+
 }
