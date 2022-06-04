@@ -40,8 +40,7 @@ public class DaylyIncrement {
 	// 天为单位，统计跑圈数据增量
 	// 定义 7:00 为一天开始与结束
 	// 将计算结果缓存到redis，并不持久化到DB
-//	@Scheduled(cron = "0 0 07 ? * *")
-	@Scheduled(fixedRate = 1000 * 60)
+	@Scheduled(cron = "0 0 07 ? * *")
 	@Async
 	public void daylyLapCount() {
 
