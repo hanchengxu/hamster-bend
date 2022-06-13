@@ -2,6 +2,7 @@ package com.example.hamster.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +44,7 @@ public class ActiveService {
                 e.printStackTrace();
             }
 
-            List<Active> activeList = activeMapper.selectLapCountByDate(getActiveBean.getHamsterId(), startTime, endTime);
+            List<Active> activeList = activeMapper.selectLapCountByDateDesc(getActiveBean.getHamsterId(), startTime, endTime);
 
             int maxCount = activeList.get(0).getLapCount();
             int mixCount = activeList.get(activeList.size() - 1).getLapCount();
@@ -66,9 +67,23 @@ public class ActiveService {
     }
 
 
-    public List<Map<String, Object>> getLapCountByDay(Integer hamsterId) {
-    	List<Map<String, Object>> lapCountByDayList = activeMapper.selectLapCountByDay(hamsterId);
-		return lapCountByDayList;
+    public Map<String, Object> getLapCountByDay(Integer hamsterId) {
+    	
+    	LocalDateTime nowTime = LocalDateTime.now();
+    	LocalDateTime batchTime = LocalDateTime.now().withHour(7).withMinute(0).withSecond(0).withNano(0);
+    	LocalDateTime targetTime = null;
+    	//判断查询时是否已完成当天 圈数统计
+    	if(nowTime.isBefore(batchTime)) {
+    		//执行batch之前，统计从昨天7点到目前为止圈数
+    		targetTime = LocalDateTime.now().minusDays(1).withHour(7).withMinute(0).withSecond(0).withNano(0);
+    	}else{
+    		//执行batch之后
+    		targetTime = batchTime;
+    	}
+    	
+    	Map<String, Object> result = activeMapper.selectLapCountByDay(hamsterId,targetTime);;
+    	
+		return result;
     }
 
     public  List<Map<String, Object>> getScatterByHour(Integer hamsterId) {

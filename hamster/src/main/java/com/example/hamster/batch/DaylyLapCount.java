@@ -62,8 +62,8 @@ public class DaylyLapCount {
 			Map<String, Object> daylyLapResult = activeMapper.selectDayLap(hamster.getHamsterId(), fromDateTime,
 					toDateTime);
 
-			// 如果有数据,且运动量达到1000以上 则保存到lap_count_dayly表
-			if (null != daylyLapResult && (Integer) daylyLapResult.get("day_lap")>1000) {
+			// 如果有数据,且运动量达到500以上 则保存到lap_count_dayly表
+			if (null != daylyLapResult && (Integer) daylyLapResult.get("day_lap")>500) {
 
 				LapCountDayly daylayLap = new LapCountDayly();
 				daylayLap.setHamsterId(hamster.getHamsterId());

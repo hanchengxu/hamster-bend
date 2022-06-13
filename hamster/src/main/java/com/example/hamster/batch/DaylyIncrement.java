@@ -44,7 +44,9 @@ public class DaylyIncrement {
 	@Async
 	public void daylyLapCount() {
 
+		// end: 早上7点
 		LocalDateTime dateEnd = LocalDateTime.now().withHour(7);
+		// start: 昨天早上7点
 		LocalDateTime dateStart = dateEnd.minusDays(1);
 
 		LocalDate dateNow = LocalDate.now();
@@ -66,7 +68,7 @@ public class DaylyIncrement {
 			int tmp = 0;
 
 			if (lapsList.size() > 0) {
-				//计算当天运动增量
+				// 计算当天运动增量
 				for (int i = 0; i < lapsList.size(); i++) {
 
 					Active active = lapsList.get(i);
@@ -79,7 +81,7 @@ public class DaylyIncrement {
 						continue;
 					}
 
-					int incLap = tmp - active.getLapCount();
+					int incLap = active.getLapCount() - tmp;
 
 					if (i != lapsList.size() - 1) {
 						incTime = DateUtils.dateToLocalDateTime(active.getInsertDateTime());
@@ -88,8 +90,8 @@ public class DaylyIncrement {
 						seriesData.add(incLap);
 					}
 				}
-				
-				//echart对象
+
+				// echart对象
 				EchartObject result = new EchartObject();
 				result.setXAxis(xAisData);
 				result.setSeries(seriesData);

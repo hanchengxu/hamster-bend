@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -122,33 +124,31 @@ public class ActiveController {
 		return bf.toString();
 	}
 
-	@RequestMapping(value = "getLapCountByDay", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public String getLapCountByDay() {
-		List<Map<String, Object>> lapList = activeService.getLapCountByDay(1);
-
-		List<String> xAxisData = new ArrayList<String>();
-		List<Integer> seriesData = new ArrayList<Integer>();
-		for (Map<String, Object> map : lapList) {
-			xAxisData.add((String) map.get("day"));
-			seriesData.add((Integer) map.get("total"));
-		}
-		String seriesDataStr = JSON.toJSONString(seriesData);
-		String xAxisDataStr = JSON.toJSONString(xAxisData);
+	@GetMapping(value = "getLapCountByDay/{hamsterId}",produces = "application/json;charset=utf-8")
+	public String getLapCountByDay(@PathVariable Integer hamsterId) {
+		
+		Map<String, Object> lapResult = activeService.getLapCountByDay(hamsterId);
+		
+		System.out.println(JSON.toJSON(lapResult));
+		
+		System.out.println(lapResult.get("xAxis"));
+		
 		// echart JSON
 		StringBuffer bf = new StringBuffer();
 		bf.append("{");
 		bf.append("\"xAxis\": ");
-		bf.append(xAxisDataStr).append(",");
+		bf.append(lapResult.get("xAxis").toString()).append(",");
 		bf.append("\"series\": ");
-		bf.append(seriesDataStr);
+		bf.append(lapResult.get("series").toString());
 		bf.append("}");
 
 		return bf.toString();
 	}
-
-	@RequestMapping(value = "getScatterByHour", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public String getScatterByHour() {
-		List<Map<String, Object>> lapList = activeService.getScatterByHour(1);
+	
+	
+	@GetMapping(value = "getHourAvgChart/{hamsterId}", produces = "application/json;charset=utf-8")
+	public String getHourAvgChart(@PathVariable Integer hamsterId) {
+		List<Map<String, Object>> lapList = activeService.getScatterByHour(hamsterId);
 		List<String> xAxisData = new ArrayList<String>();
 		List<Integer> seriesData = new ArrayList<Integer>();
 		lapList.stream().forEach(mapData -> {
@@ -168,6 +168,15 @@ public class ActiveController {
 		bf.append("}");
 
 		return bf.toString();
+	}
+	
+	//运动增量柱状图
+	@GetMapping(value = "getHourChart/{hamsterId}", produces = "application/json;charset=utf-8")
+	public Map<Object, Object> getHourChart(@PathVariable Integer hamsterId) {
+	
+		Map<Object, Object> dayly = redisTemplate.opsForHash().entries("daylyIncrement_"+hamsterId);
+
+		return dayly;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })

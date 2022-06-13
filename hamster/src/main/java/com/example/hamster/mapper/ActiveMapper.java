@@ -35,6 +35,9 @@ public interface ActiveMapper {
     int updateByPrimaryKey(Active record);
 
     @Select("select * from active where insert_date_time BETWEEN #{startTime} AND #{endTime}  and hamster_id =#{hamsterId} order by insert_date_time desc")
+   	public List<Active> selectLapCountByDateDesc(@Param("hamsterId") int hamsterId, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
+    
+    @Select("select * from active where insert_date_time BETWEEN #{startTime} AND #{endTime}  and hamster_id =#{hamsterId} order by insert_date_time")
    	public List<Active> selectLapCountByDate(@Param("hamsterId") int hamsterId, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
     
     @Select("select hamster_id, max(lap_count)-min(lap_count)as day_lap "
@@ -62,7 +65,7 @@ public interface ActiveMapper {
 
    	public List<Map<String, Object>> selectLapCountByMonth(int id);
 
-   	public List<Map<String, Object>> selectLapCountByDay(int id);
+   	public Map<String, Object> selectLapCountByDay(@Param("id") int id, @Param("targetTime") LocalDateTime targetTime);
 
    	public List<Map<String, Object>> selectScatterByHour(int id);
 
