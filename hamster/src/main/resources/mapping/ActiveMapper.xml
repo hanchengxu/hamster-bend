@@ -249,7 +249,8 @@
 	    	where 
 	    		hamster_id =#{id}
 			union
-				select 'Now', max(lap_count)-min(lap_count) 
+				select 'Now', 
+				coalesce (max(lap_count)-min(lap_count),0)
 			from 
 				active 
 			where 
