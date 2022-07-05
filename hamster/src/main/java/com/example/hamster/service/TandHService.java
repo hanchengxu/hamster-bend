@@ -2,10 +2,12 @@ package com.example.hamster.service;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
 import com.example.hamster.controller.ResultMsg;
 import com.example.hamster.controller.bean.SaveTandHBean;
 import com.example.hamster.entity.CaseHumidity;
@@ -77,6 +79,13 @@ public class TandHService {
 		}
 
 		return result;
+	}
+	
+	public String getCaseAvgTemperature(Integer hamsterId) {
+		
+		List<Integer> list = caseTMapper.getAvgTemperature(hamsterId);
+		
+		return JSON.toJSONString(list);
 	}
 
 }

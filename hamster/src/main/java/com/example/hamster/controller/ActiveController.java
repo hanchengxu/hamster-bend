@@ -29,6 +29,7 @@ import com.example.hamster.controller.bean.IncrementLapBean;
 import com.example.hamster.controller.bean.SaveActiveBean;
 import com.example.hamster.entity.Active;
 import com.example.hamster.service.ActiveService;
+import com.example.hamster.service.TandHService;
 import com.zaxxer.hikari.HikariDataSource;
 
 @RestController
@@ -39,6 +40,9 @@ public class ActiveController {
 
 	@Autowired
 	private ApplicationContext applicationContext;
+	
+	@Autowired
+	private TandHService tAndHService;
 
 	@Autowired
 	private RedisTemplate<String, Object> redisTemplate;
@@ -129,9 +133,7 @@ public class ActiveController {
 		
 		Map<String, Object> lapResult = activeService.getLapCountByDay(hamsterId);
 		
-		System.out.println(JSON.toJSON(lapResult));
-		
-		System.out.println(lapResult.get("xAxis"));
+		String caseAvgTemperature = tAndHService.getCaseAvgTemperature(hamsterId);
 		
 		// echart JSON
 		StringBuffer bf = new StringBuffer();
@@ -139,7 +141,9 @@ public class ActiveController {
 		bf.append("\"xAxis\": ");
 		bf.append(lapResult.get("xAxis").toString()).append(",");
 		bf.append("\"series\": ");
-		bf.append(lapResult.get("series").toString());
+		bf.append(lapResult.get("series").toString()).append(",");
+		bf.append("\"caseAvgTemperature\": ");
+		bf.append(caseAvgTemperature);
 		bf.append("}");
 
 		return bf.toString();
