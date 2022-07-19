@@ -83,7 +83,7 @@ public class TandHService {
 	
 	public String getCaseAvgTemperature(Integer hamsterId) {
 		
-		List<Integer> list = caseTMapper.getAvgTemperature(hamsterId);
+		List<Float> list = caseTMapper.getAvgTemperature(hamsterId);
 		
 		return JSON.toJSONString(list);
 	}

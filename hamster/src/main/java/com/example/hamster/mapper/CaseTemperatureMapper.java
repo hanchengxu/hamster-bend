@@ -24,7 +24,7 @@ public interface CaseTemperatureMapper {
     int updateByExample(@Param("record") CaseTemperature record, @Param("example") CaseTemperatureExample example);
     
     @Select("select "
-    		+ "avg(temper.ct)::int avg_temper "
+    		+ "CAST(avg(temper.ct) as DECIMAL(18,1)) avg_temper "
     		+ "from "
     		+ "lap_count_dayly dayly_lap "
     		+ "left join "
@@ -37,5 +37,5 @@ public interface CaseTemperatureMapper {
     		+ "dayly_lap.hamster_id =#{hamsterId} "
     		+ "group by dayly_lap.target_date "
     		+ "order by dayly_lap.target_date ")
-    List<Integer> getAvgTemperature(@Param("hamsterId") int hamsterId);
+    List<Float> getAvgTemperature(@Param("hamsterId") int hamsterId);
 }
