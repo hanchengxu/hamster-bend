@@ -6,14 +6,39 @@
 		  "description": "mqtt.server.url"
 	  },
 	  {
-		  "name": "mmqtt.server.user",
+		  "name": "mqtt.server.user",
 		  "type": "java.lang.String",
-		  "description": "mmqtt.server.user"
+		  "description": "mqtt.server.user"
 	  },
 	  {
 		  "name": "mqtt.server.password",
 		  "type": "java.lang.String",
 		  "description": "mqtt.server.password"
+	  },
+	  {
+		  "name": "cros.allowed.origin",
+		  "type": "java.lang.String",
+		  "description": "cros.allowed.origin"
+	  },
+	  {
+		  "name": "https.open",
+		  "type": "java.lang.Boolean",
+		  "description": "是否启动https"
+	  },
+	  {
+		  "name": "jwt.secret",
+		  "type": "java.lang.String",
+		  "description": "jwt.secret"
+	  },
+	  {
+		  "name": "jwt.cookie.name",
+		  "type": "java.lang.String",
+		  "description": "jwt.cookie.name"
+	  },
+	  {
+		  "name": "jwt.expiration",
+		  "type": "java.lang.Long",
+		  "description": "jwt.expiration"
 	  }
   ]
 }

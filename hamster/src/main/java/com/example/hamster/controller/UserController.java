@@ -18,7 +18,7 @@ public class UserController {
     @RequestMapping("getUser/{id}")
     @ResponseBody
     public String GetUser(@PathVariable int id){
-        return userService.findById(id).toString();
+        return null;
     }
 
     @RequestMapping("testActive")

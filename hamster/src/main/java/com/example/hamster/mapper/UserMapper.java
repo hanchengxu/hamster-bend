@@ -9,6 +9,6 @@ import com.example.hamster.entity.User;
 @Mapper
 public interface UserMapper {
 
-	 @Select("select * from \"user\" where id = #{id}")
-    User findById(@Param("id") int id);
+	@Select("select * from users where username = #{userName}")
+    User findByUserName(@Param("userName") String userName);
 }
