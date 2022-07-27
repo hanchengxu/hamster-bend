@@ -38,7 +38,7 @@ public class JwtUtils {
 		try {
 			claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
 		} catch (Exception e) {
-			LOGGER.info("Token is invalid:{}", token);
+			LOGGER.debug("Token is invalid:{}", token);
 		}
 		return claims;
 	}

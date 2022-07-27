@@ -33,6 +33,7 @@ import com.example.hamster.service.TandHService;
 import com.zaxxer.hikari.HikariDataSource;
 
 @RestController
+@RequestMapping("/api")
 public class ActiveController {
 
 	@Autowired
@@ -52,7 +53,7 @@ public class ActiveController {
 	/**
 	 * save lap_count from mqtt
 	 */
-	@RequestMapping("saveActive")
+	@RequestMapping("/noauth/saveActive")
 	public String saveActive(@RequestBody SaveActiveBean activeBean) {
 
 		Active active = new Active();
@@ -73,7 +74,7 @@ public class ActiveController {
 	 * @param getActiveBean
 	 * @return
 	 */
-	@RequestMapping(value = "getLapCount", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/noauth/getLapCount", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public String getlapCount(@RequestBody GetActiveBean getActiveBean) {
 
 		Integer lapCount = activeService.findLapCount(getActiveBean);
@@ -87,7 +88,7 @@ public class ActiveController {
 	 * @param hamsterId
 	 * @return
 	 */
-	@RequestMapping(value = "getMaxLapCount", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/noauth/getMaxLapCount", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public String getMaxLapCount(@RequestParam(name = "hamsterId", required = true) Integer hamsterId) {
 
 		if (null == hamsterId) {
@@ -102,7 +103,7 @@ public class ActiveController {
 		return "{\"lapCount\":" + lapCount + "}";
 	}
 
-	@RequestMapping(value = "getLapCountByMonth", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/noauth/getLapCountByMonth", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public String getLapCountByMonth(@RequestParam(name = "hamsterId", required = true) Integer hamsterId) {
 
 		List<Map<String, Object>> lapList = activeService.getLapCountByMonth(hamsterId);
@@ -128,7 +129,7 @@ public class ActiveController {
 		return bf.toString();
 	}
 
-	@GetMapping(value = "getLapCountByDay/{hamsterId}",produces = "application/json;charset=utf-8")
+	@GetMapping(value = "/noauth/getLapCountByDay/{hamsterId}",produces = "application/json;charset=utf-8")
 	public String getLapCountByDay(@PathVariable Integer hamsterId) {
 		
 		Map<String, Object> lapResult = activeService.getLapCountByDay(hamsterId);
@@ -150,7 +151,7 @@ public class ActiveController {
 	}
 	
 	
-	@GetMapping(value = "getHourAvgChart/{hamsterId}", produces = "application/json;charset=utf-8")
+	@GetMapping(value = "/noauth/getHourAvgChart/{hamsterId}", produces = "application/json;charset=utf-8")
 	public String getHourAvgChart(@PathVariable Integer hamsterId) {
 		List<Map<String, Object>> lapList = activeService.getScatterByHour(hamsterId);
 		List<String> xAxisData = new ArrayList<String>();
@@ -175,7 +176,7 @@ public class ActiveController {
 	}
 	
 	//运动增量柱状图
-	@GetMapping(value = "getHourChart/{hamsterId}", produces = "application/json;charset=utf-8")
+	@GetMapping(value = "/noauth/getHourChart/{hamsterId}", produces = "application/json;charset=utf-8")
 	public Map<Object, Object> getHourChart(@PathVariable Integer hamsterId) {
 	
 		Map<Object, Object> dayly = redisTemplate.opsForHash().entries("daylyIncrement_"+hamsterId);
@@ -231,7 +232,7 @@ public class ActiveController {
 	 * 
 	 * @param bean
 	 */
-	@PostMapping(value = "incrementLap")
+	@PostMapping(value = "/noauth/incrementLap")
 	public void incrementLap(@RequestBody IncrementLapBean bean) {
 
 		if (null != bean.getHamsterId()) {

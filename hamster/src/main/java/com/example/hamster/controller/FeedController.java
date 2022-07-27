@@ -10,12 +10,13 @@ import com.example.hamster.controller.bean.FeedFoodBean;
 import com.example.hamster.service.FeedFoodService;
 
 @RestController
+@RequestMapping("/api")
 public class FeedController {
 
 	@Autowired
 	FeedFoodService service;
 
-	@RequestMapping(value = "feedFood", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/noauth/feedFood", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public ResultMsg feedFood(@RequestBody FeedFoodBean feedFoodBean){
 
 		ResultMsg result = new ResultMsg();
