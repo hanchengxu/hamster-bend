@@ -44,7 +44,7 @@ public class DaylyLapCount {
 		// 设定时间区间
 		LocalDateTime toDateTime = LocalDateTime.now().withHour(7).withMinute(0).withSecond(0);
 		LocalDateTime fromDateTime = toDateTime.minusDays(1);
-		
+
 		logger.info("fromDateTime:"+ fromDateTime+",toDateTime:"+toDateTime);
 
 		LocalDate targetDate = LocalDate.now();
@@ -62,8 +62,8 @@ public class DaylyLapCount {
 			Map<String, Object> daylyLapResult = activeMapper.selectDayLap(hamster.getHamsterId(), fromDateTime,
 					toDateTime);
 
-			// 如果有数据,且运动量达到500以上 则保存到lap_count_dayly表
-			if (null != daylyLapResult && (Integer) daylyLapResult.get("day_lap")>500) {
+			// 如果有数据,且运动量达到0以上 则保存到lap_count_dayly表
+			if (null != daylyLapResult && (Integer) daylyLapResult.get("day_lap")> 0) {
 
 				LapCountDayly daylayLap = new LapCountDayly();
 				daylayLap.setHamsterId(hamster.getHamsterId());
@@ -74,44 +74,44 @@ public class DaylyLapCount {
 			}
 		});
 	}
-	
-	
-	
+
+
+
 	//初始化 历史数据用
 	@Async
 	public void updateTime(){
-		
+
 		LocalDateTime toDateTime = LocalDateTime.now().withHour(7).withMinute(0).withSecond(0);
 		LocalDateTime fromDateTime = toDateTime.minusDays(1);
-		
+
 		LocalDate targetDate = LocalDate.now();
-		
-		
+
+
 		for(int i=0;i<417;i++) {
-			
+
 			Map<String, Object> daylyLapResult = activeMapper.selectDayLap(1, fromDateTime,
 					toDateTime);
-			
+
 			// 如果有数据则保存到lap_count_dayly表
 			if (null != daylyLapResult) {
-				
+
 				Integer dayTotalLap = (Integer) daylyLapResult.get("day_lap");
-	
+
 				LapCountDayly daylayLap = new LapCountDayly();
 				daylayLap.setHamsterId(1);
 				daylayLap.setTargerDate(targetDate);
 				daylayLap.setTotalLap(dayTotalLap);
 				daylyLapMapper.insert(daylayLap);
-				
+
 				logger.info("fromDateTime:"+ fromDateTime+",toDateTime:"+toDateTime+" ,dayLap;"+dayTotalLap);
 			}
-			
+
 			toDateTime = toDateTime.minusDays(1);
 			fromDateTime = fromDateTime.minusDays(1);
 
 			targetDate = targetDate.minusDays(1);
 		}
-		
+
 	}
 
 }
