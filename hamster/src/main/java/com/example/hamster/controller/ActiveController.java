@@ -41,7 +41,7 @@ public class ActiveController {
 
 	@Autowired
 	private ApplicationContext applicationContext;
-	
+
 	@Autowired
 	private TandHService tAndHService;
 
@@ -70,7 +70,7 @@ public class ActiveController {
 	/**
 	 * get laps between a time quantum getActiveBean.startDate and endDate String
 	 * format: yyyy-MM-dd hh:mm:ss
-	 * 
+	 *
 	 * @param getActiveBean
 	 * @return
 	 */
@@ -84,7 +84,7 @@ public class ActiveController {
 
 	/**
 	 * get total laps from active table by hamsterId
-	 * 
+	 *
 	 * @param hamsterId
 	 * @return
 	 */
@@ -131,11 +131,11 @@ public class ActiveController {
 
 	@GetMapping(value = "/noauth/getLapCountByDay/{hamsterId}",produces = "application/json;charset=utf-8")
 	public String getLapCountByDay(@PathVariable Integer hamsterId) {
-		
+
 		Map<String, Object> lapResult = activeService.getLapCountByDay(hamsterId);
-		
+
 		String caseAvgTemperature = tAndHService.getCaseAvgTemperature(hamsterId);
-		
+
 		// echart JSON
 		StringBuffer bf = new StringBuffer();
 		bf.append("{");
@@ -149,8 +149,8 @@ public class ActiveController {
 
 		return bf.toString();
 	}
-	
-	
+
+
 	@GetMapping(value = "/noauth/getHourAvgChart/{hamsterId}", produces = "application/json;charset=utf-8")
 	public String getHourAvgChart(@PathVariable Integer hamsterId) {
 		List<Map<String, Object>> lapList = activeService.getScatterByHour(hamsterId);
@@ -174,11 +174,11 @@ public class ActiveController {
 
 		return bf.toString();
 	}
-	
+
 	//运动增量柱状图
 	@GetMapping(value = "/noauth/getHourChart/{hamsterId}", produces = "application/json;charset=utf-8")
 	public Map<Object, Object> getHourChart(@PathVariable Integer hamsterId) {
-	
+
 		Map<Object, Object> dayly = redisTemplate.opsForHash().entries("daylyIncrement_"+hamsterId);
 
 		return dayly;
@@ -229,7 +229,7 @@ public class ActiveController {
 
 	/**
 	 * increm lapcount from mqtt broker
-	 * 
+	 *
 	 * @param bean
 	 */
 	@PostMapping(value = "/noauth/incrementLap")

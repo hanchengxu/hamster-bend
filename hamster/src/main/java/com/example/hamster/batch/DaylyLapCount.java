@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.example.hamster.entity.Hamster;
@@ -37,7 +36,7 @@ public class DaylyLapCount {
 	/**
 	 * 上午07:00 为一天的开始 每天上午8点统计前一天跑圈数据 8点前查看的话，需要结合active表
 	 */
-	@Scheduled(cron = "0 0 08 ? * *")
+//	@Scheduled(cron = "0 0 08 ? * *")
 	@Async
 	public void daylyLapCount() {
 
