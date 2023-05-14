@@ -2,7 +2,6 @@ package com.example.hamster.mapper;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
@@ -18,6 +17,10 @@ public interface AttendanceAdditionalDataMapper {
 
 	 @Select("select additional_id,work_day::varchar,price,additional_desc "
 	 		+ "from  attendance_additional_data where work_day = #{workDay}")
-	public List<Map<String, Object>> selectAttendanceAdditionalDataByworkDay(@Param("workDay") LocalDate workDay);
+	public List<AttendanceAdditionalData> selectAttendanceAdditionalDataByworkDay(@Param("workDay") LocalDate workDay);
+
+	 @Select("select * from attendance_additional_data where to_char(work_day,'yyyy-MM') = #{yearMonth}")
+	public List<AttendanceAdditionalData> selectAttendanceAdditionalDataByMonth(@Param("yearMonth") String yearMonth);
+
 
 }

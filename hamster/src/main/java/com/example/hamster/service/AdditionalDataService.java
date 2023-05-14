@@ -1,9 +1,7 @@
 package com.example.hamster.service;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,16 +19,18 @@ public class AdditionalDataService {
 		additionalDataMapper.insert(additionalData);
 	}
 
-	public List<Map<String,Object>> findAdditonalDatas(LocalDate workDay) {
+	public List<AttendanceAdditionalData> findAdditonalDatas(LocalDate workDay) {
 
-		List<Map<String,Object>> additionalDataList = additionalDataMapper
+		List<AttendanceAdditionalData> additionalDataList = additionalDataMapper
 				.selectAttendanceAdditionalDataByworkDay(workDay);
 
-		AttendanceAdditionalData ad= AttendanceAdditionalData.builder().
-				workDay(new Date()).
-				price((float) 12.4).
-				additionalDesc("asd").
-				build();
+		return additionalDataList;
+	}
+
+	public List<AttendanceAdditionalData> findAdditonalDatasByMonth(String yearMonth) {
+
+		List<AttendanceAdditionalData> additionalDataList = additionalDataMapper
+				.selectAttendanceAdditionalDataByMonth(yearMonth);
 
 		return additionalDataList;
 	}

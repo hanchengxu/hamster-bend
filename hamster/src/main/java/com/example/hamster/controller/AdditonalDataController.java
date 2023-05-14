@@ -3,7 +3,6 @@ package com.example.hamster.controller;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.hamster.constant.CommonResponse;
 import com.example.hamster.constant.ResponseCode;
+import com.example.hamster.entity.AttendanceAdditionalData;
 import com.example.hamster.service.AdditionalDataService;
 
 @RestController
@@ -30,7 +30,9 @@ public class AdditonalDataController {
 	public CommonResponse getAdditionalDataList(@PathVariable String workDay) {
 
 		DateTimeFormatter ft = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		List<Map<String,Object>> targetList= additonalDataService.findAdditonalDatas(LocalDate.parse(workDay,ft));
+		List<AttendanceAdditionalData> targetList= additonalDataService.findAdditonalDatas(LocalDate.parse(workDay,ft));
+
+		logger.debug(targetList.toString());
 
 		return new CommonResponse(ResponseCode.STATSU_OK, null, targetList);
 

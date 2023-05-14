@@ -12,6 +12,6 @@ public class AttendanceAdditionalData {
 
 	private Integer additionalId;
 	private Date workDay;
-	private Float price;
+	private Double price;
 	private String additionalDesc;
 }

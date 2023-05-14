@@ -53,4 +53,12 @@ public class AttendanceDataController {
 		return new CommonResponse(ResponseCode.STATSU_OK, null, attendanceDataService.getAttendanceData(LocalDate.parse(workDay,ft)));
 	}
 
+	@GetMapping(value = "/noauth/countWorkHoursByDay/{workDay}", produces = "application/json;charset=utf-8")
+	public CommonResponse countWorkHoursByDay(@PathVariable String workDay) {
+
+		DateTimeFormatter ft = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+		return new CommonResponse(ResponseCode.STATSU_OK, null, attendanceDataService.countWorkHours(LocalDate.parse(workDay,ft)));
+	}
+
 }

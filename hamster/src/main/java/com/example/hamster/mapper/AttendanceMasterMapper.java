@@ -16,17 +16,17 @@ public interface AttendanceMasterMapper {
 
 	@Insert("INSERT INTO public.attendance_master(item_name,item_value,item_desc) "
 			+ "VALUES(#{master.itemName},#{master.itemValue},#{master.itemDesc})")
-	int insertMaster(@Param("AttendanceMaster") AttendanceMaster master);
+	int insertMaster(@Param("master") AttendanceMaster master);
 
 
 	@Update("UPDATE public.attendance_master "
-			+ "SET item_value = #{master.itemValue} ,item_desc = #{master.itemDesc} "
+			+ "SET item_value = #{master.itemValue} ,item_desc = #{master.itemDesc},update_datetime = #{master.updateDatetime} "
 			+ "where item_name = #{master.itemName}")
-	int updateMaster(@Param("AttendanceMaster") AttendanceMaster master);
+	int updateMaster(@Param("master") AttendanceMaster master);
 
 	@Delete("DELETE FROM public.attendance_master " +
 			"WHERE item_name=#{master.itemName} " )
-	int deleteMaster(@Param("AttendanceMaster") AttendanceMaster master);
+	int deleteMaster(@Param("master") AttendanceMaster master);
 
 	@Select("SELECT * from public.attendance_master order by id")
 	List<AttendanceMaster> selectAllMaster();

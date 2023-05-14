@@ -19,5 +19,5 @@ public class AttendanceData {
 	private String workUserName;
 	private Date insertDatetime;
 	private Date updateDatetime;
-
+	private Double workHours;
 }

@@ -1,5 +1,6 @@
 package com.example.hamster.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ public class AttendanceMasterService {
 	@Transactional(rollbackFor = Exception.class)
 	public AttendanceMaster updateMaster(AttendanceMaster master) {
 
+		master.setUpdateDatetime(new Date());
 		mapper.updateMaster(master);
 
 		return selectOneMaster(master.getItemName());

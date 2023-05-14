@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,6 +45,22 @@ public class AttendanceMasterController {
 
 		return new CommonResponse(ResponseCode.STATSU_OK,null,master);
 
+	}
+
+	@PostMapping(value = "/noauth/updateMaster", produces = "application/json;charset=utf-8")
+	public CommonResponse updateMaster(@RequestBody AttendanceMaster bean) {
+
+		AttendanceMaster master = masterService.updateMaster(bean);
+
+		return new CommonResponse(ResponseCode.STATSU_OK,null,master);
+	}
+
+	@PostMapping(value = "/noauth/insertMaster", produces = "application/json;charset=utf-8")
+	public CommonResponse insertMaster(@RequestBody AttendanceMaster bean) {
+
+		AttendanceMaster master = masterService.insertMaster(bean);
+
+		return new CommonResponse(ResponseCode.STATSU_OK,null,master);
 	}
 
 

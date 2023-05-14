@@ -1,5 +1,8 @@
 package com.example.hamster.utils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -71,5 +74,41 @@ public class DateUtils {
         final Date date = Date.from(zdt.toInstant());
         return date;
     }
+
+    public static Double countWorkHours(Date startTime, Date endTime) {
+
+    	LocalDateTime start = handleTime(startTime);
+    	LocalDateTime end = handleTime(endTime);
+
+    	Duration duration = Duration.between(start,end);
+
+    	System.out.println(duration.toMinutes());
+
+		return (double)duration.toMinutes() / 60.0;
+
+    }
+
+    public static LocalDateTime handleTime(Date time) {
+
+    	LocalDateTime temp = dateToLocalDateTime(time);
+
+    	int minute = temp.getMinute();
+
+    	if (minute <15){
+    		return temp.withMinute(0).withSecond(0);
+    	} else if( minute <= 45) {
+    		return temp.withMinute(30).withSecond(0);
+    	} else {
+    		return temp.plusHours(1).withMinute(0).withSecond(0);
+    	}
+    }
+
+    public static void main(String[] args) throws ParseException {
+
+    	SimpleDateFormat simFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    	Date dtBeg = simFormat.parse("2023-05-13 11:00:30");
+    	Date dtBeg2= simFormat.parse("2023-05-13 23:46:29");
+    	System.out.println(countWorkHours(dtBeg,dtBeg2));
+	}
 
 }
