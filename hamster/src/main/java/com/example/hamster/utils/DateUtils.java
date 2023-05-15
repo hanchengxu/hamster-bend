@@ -94,11 +94,15 @@ public class DateUtils {
 
     	int minute = temp.getMinute();
 
-    	if (minute <15){
+    	if (minute <7){
     		return temp.withMinute(0).withSecond(0);
-    	} else if( minute <= 45) {
+    	} else if( minute <= 23) {
+    		return temp.withMinute(15).withSecond(0);
+    	} else if( minute <= 37) {
     		return temp.withMinute(30).withSecond(0);
-    	} else {
+    	} else if( minute <= 53) {
+    		return temp.withMinute(45).withSecond(0);
+    	}else {
     		return temp.plusHours(1).withMinute(0).withSecond(0);
     	}
     }
