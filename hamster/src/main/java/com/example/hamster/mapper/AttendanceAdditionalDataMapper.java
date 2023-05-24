@@ -13,14 +13,13 @@ public interface AttendanceAdditionalDataMapper {
 
 	@Insert("INSERT INTO attendance_additional_data (work_day,price,additional_desc) "
 			+ "VALUES (#{additionalData.workDay},#{additionalData.price},#{additionalData.additionalDesc})")
-	 int insert(@Param("additionalData") AttendanceAdditionalData additionalData);
+	int insert(@Param("additionalData") AttendanceAdditionalData additionalData);
 
-	 @Select("select additional_id,work_day::varchar,price,additional_desc "
-	 		+ "from  attendance_additional_data where work_day = #{workDay}")
+	@Select("select additional_id,work_day::varchar,price,additional_desc "
+			+ "from  attendance_additional_data where work_day = #{workDay}")
 	public List<AttendanceAdditionalData> selectAttendanceAdditionalDataByworkDay(@Param("workDay") LocalDate workDay);
 
-	 @Select("select * from attendance_additional_data where to_char(work_day,'yyyy-MM') = #{yearMonth}")
+	@Select("select * from attendance_additional_data where to_char(work_day,'yyyy-MM') = #{yearMonth} order by work_day")
 	public List<AttendanceAdditionalData> selectAttendanceAdditionalDataByMonth(@Param("yearMonth") String yearMonth);
-
 
 }

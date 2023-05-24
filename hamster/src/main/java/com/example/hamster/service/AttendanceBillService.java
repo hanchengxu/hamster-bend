@@ -39,6 +39,10 @@ public class AttendanceBillService {
 		return mapper.selectByReportDate(reportDate);
 	}
 
+	public List<String> selectAllReportsDate(){
+		return mapper.selectAllReportsDate();
+	}
+
 	@Transactional(rollbackFor = Exception.class)
 	public AttendanceBill createReport(String reportDate) {
 

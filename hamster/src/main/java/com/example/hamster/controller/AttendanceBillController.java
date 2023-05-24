@@ -53,5 +53,11 @@ public class AttendanceBillController {
 
 	}
 
+	@GetMapping(value = "/noauth/getAllReportDate", produces = "application/json;charset=utf-8")
+	public CommonResponse getAllReportDate() {
+
+		return new CommonResponse(ResponseCode.STATSU_OK, null, billService.selectAllReportsDate());
+	}
+
 
 }

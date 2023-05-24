@@ -1,5 +1,7 @@
 package com.example.hamster.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
@@ -24,5 +26,8 @@ public interface AttendanceBillMapper {
 
 	@Delete("DELETE FROM attendance_bill WHERE report_date = #{reportDate}")
 	int deleteBillReport(@Param("reportDate") String reportDate);
+
+	@Select("select distinct report_date::varchar from attendance_bill order by report_date")
+	List<String> selectAllReportsDate();
 
 }

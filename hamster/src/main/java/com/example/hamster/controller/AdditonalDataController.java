@@ -37,4 +37,14 @@ public class AdditonalDataController {
 		return new CommonResponse(ResponseCode.STATSU_OK, null, targetList);
 
 	}
+
+	@GetMapping(value = "/noauth/getAdditionalDataMonthly/{workMonth}", produces = "application/json;charset=utf-8")
+	public CommonResponse getAdditionalDataMonthly(@PathVariable String workMonth) {
+		List<AttendanceAdditionalData> targetList= additonalDataService.findAdditonalDatasByMonth(workMonth);
+
+		logger.debug(targetList.toString());
+
+		return new CommonResponse(ResponseCode.STATSU_OK, null, targetList);
+
+	}
 }
