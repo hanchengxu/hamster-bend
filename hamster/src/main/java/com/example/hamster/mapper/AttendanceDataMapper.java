@@ -39,7 +39,7 @@ public interface AttendanceDataMapper {
 
 	@Select("SELECT work_day, start_time, end_time, work_user_name, insert_datetime, update_datetime, work_hours "
 			+ "from public.attendance_data "
-			+ "where to_char(work_day,'yyyy-MM') = #{yearMonth} "
+			+ "where to_char(work_day,'yyyy-MM') = #{yearMonth} and work_hours is not null "
 			+ "order by work_day")
 	List<AttendanceData> selectAttendanceDataByYearMonth(@Param("yearMonth") String yearMonth);
 
