@@ -3,11 +3,11 @@ package com.example.hamster.entity;
 
 import java.util.Date;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@Builder
+@NoArgsConstructor
 public class AttendanceAdditionalData {
 
 	private Integer additionalId;

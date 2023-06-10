@@ -1,5 +1,6 @@
 package com.example.hamster.controller;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -9,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -44,6 +47,22 @@ public class AdditonalDataController {
 
 		logger.debug(targetList.toString());
 
+		return new CommonResponse(ResponseCode.STATSU_OK, null, targetList);
+
+	}
+
+	@PostMapping(value ="/noauth/saveAdditionalData", produces = "application/json;charset=utf-8")
+	public CommonResponse saveAdditionalData(@RequestBody AttendanceAdditionalData saveData) {
+
+
+		additonalDataService.insertOne(saveData);
+
+		//获得需要存储的附加信息所在月
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
+		String insertMonth = df.format(saveData.getWorkDay());
+
+		// insert之后获取当月所有信息
+		List<AttendanceAdditionalData> targetList= additonalDataService.findAdditonalDatasByMonth(insertMonth);
 		return new CommonResponse(ResponseCode.STATSU_OK, null, targetList);
 
 	}

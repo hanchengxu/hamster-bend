@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.hamster.entity.AttendanceAdditionalData;
 import com.example.hamster.mapper.AttendanceAdditionalDataMapper;
@@ -15,6 +16,8 @@ public class AdditionalDataService {
 	@Autowired
 	AttendanceAdditionalDataMapper additionalDataMapper;
 
+
+   @Transactional
 	public void insertOne(AttendanceAdditionalData additionalData) {
 		additionalDataMapper.insert(additionalData);
 	}
