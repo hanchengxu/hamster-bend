@@ -19,6 +19,7 @@ import com.example.hamster.constant.CommonResponse;
 import com.example.hamster.constant.ResponseCode;
 import com.example.hamster.entity.AttendanceAdditionalData;
 import com.example.hamster.service.AdditionalDataService;
+import com.example.hamster.service.AttendanceBillService;
 
 @RestController
 @RequestMapping("/api")
@@ -26,6 +27,8 @@ public class AdditonalDataController {
 
 	@Autowired
 	AdditionalDataService additonalDataService;
+	@Autowired
+	AttendanceBillService billService;
 
 	private static final Logger logger = LoggerFactory.getLogger(AdditonalDataController.class);
 
@@ -54,12 +57,13 @@ public class AdditonalDataController {
 	@PostMapping(value ="/noauth/saveAdditionalData", produces = "application/json;charset=utf-8")
 	public CommonResponse saveAdditionalData(@RequestBody AttendanceAdditionalData saveData) {
 
-
 		additonalDataService.insertOne(saveData);
 
 		//获得需要存储的附加信息所在月
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
 		String insertMonth = df.format(saveData.getWorkDay());
+		//更新报表数据
+		billService.createReport(insertMonth);
 
 		// insert之后获取当月所有信息
 		List<AttendanceAdditionalData> targetList= additonalDataService.findAdditonalDatasByMonth(insertMonth);
